@@ -1,24 +1,123 @@
+$pink: #e05f81;
+$green: #157722;
+$yellow: #fbb305;
+$blue: #01798e;
+
+.message h1 {
+  text-align: center;
+}
+
 .castles {
   display: flex;
   flex-direction: row;
-}
+  justify-content: center;
+  margin-top: 5vh;
 
-.castle {
-  //background-image: url("../../../assets/tiles.webp");
-}
-/* 
-  #red-castle {
+  .castle {
+    background-image: url("../../../assets/images/tiles.webp");
+    margin: 0 20px;
+    position: relative;
+    box-shadow: 4px 4px 17px 7px rgba(70, 70, 70, 0.2);
+
+    &:hover {
+      box-shadow: 4px 4px 17px 7px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  .castle,
+  .fade {
+    width: 100px;
+    height: 100px;
+  }
+
+  #pink-castle {
     background-position: 205px 205px;
   }
-  
+
   #yellow-castle {
     background-position: 205px 103px;
   }
-  
+
   #blue-castle {
     background-position: 103px 103px;
   }
-  
+
   #green-castle {
     background-position: 103px 205px;
-  } */
+  }
+
+  .fade {
+    background-color: rgba(110, 110, 110, 0.4);
+  }
+
+  .king {
+    background-image: url("../../../assets/images/kings.webp");
+    width: 57px;
+    height: 70px;
+    position: absolute;
+    z-index: 100;
+    left: 21.5px;
+    top: 15px;
+  }
+
+  .pink-king {
+    background-position: 33.3%;
+  }
+
+  .yellow-king {
+    background-position: 66.6%;
+  }
+
+  .blue-king {
+    background-position-x: 100%;
+  }
+}
+
+.players {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+
+  .player {
+    margin: 0 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      border-radius: 50%;
+      border: rgba(110, 110, 110, 0.4) 2px dotted;
+      width: 80px;
+    }
+
+    .label {
+      border: 2px dashed #222;
+      border-radius: 10px;
+      height: 20px;
+      padding: 5px 10px;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .validate,
+    .ready {
+      margin: 10px;
+    }
+
+    .validate {
+      width: 55px;
+
+      &:hover {
+        box-shadow: 2px 2px 12px 0 rgba(110, 110, 110, 0.4);
+      }
+    }
+
+    .ready {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: $green;
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+  }
+}

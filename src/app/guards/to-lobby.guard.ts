@@ -9,7 +9,7 @@ import { PlayerInfoService } from '../services/player-info.service';
 export class ToLobbyGuard implements CanActivate {
   private canAccess: boolean;
   constructor(playerInfo: PlayerInfoService) {
-    this.canAccess = playerInfo.player.canAccessToLobby;
+    this.canAccess = (playerInfo.player.canAccessToLobby)? playerInfo.player.canAccessToLobby : false;
     }
   canActivate(
     route: ActivatedRouteSnapshot,

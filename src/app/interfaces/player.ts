@@ -1,7 +1,9 @@
 export interface Player {
-    name: string;
+    pseudo: string;
     color: string;
-    score: number;
-    canAccessToLobby: boolean;
-    canAccessToGame: boolean;
+    score?: number;
+    canAccessToLobby?: boolean;
+    canAccessToGame?: boolean;
+    uid?: string;
+    readyToPlay: boolean;
 }

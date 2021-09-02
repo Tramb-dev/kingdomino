@@ -1,14 +1,46 @@
-<div class="new-player">Nouveau joueur : </div>
-
+<!-- <div class="new-player" ngIf="">Nouveau joueur : </div> -->
+<div class="message"><h1>Sélectionnez une couleur de royaume.</h1></div>
 <div class="castles">
-    <img src="assets/images/tiles.webp" width="100" height="100" alt="tuiles kingdomino" class="castle" id="red-castle">
-    <img src="assets/images/tiles.webp" width="100" height="100" alt="tuiles kingdomino" class="castle" id="green-castle">
-    <img src="assets/images/tiles.webp" width="100" height="100" alt="tuiles kingdomino" class="castle" id="yellow-castle">
-    <img src="assets/images/tiles.webp" width="100" height="100" alt="tuiles kingdomino" class="castle" id="blue-castle">
+    <div class="castle" id="pink-castle" (click)="selectCastle('pink')">
+        <div [ngClass]="{'fade': castles.pink}"></div>
+        <div *ngIf="castles.pink" class="king pink-king"></div>
+    </div>
+    <div class="castle" [ngClass]="{'fade': castles.green}" id="green-castle" (click)="selectCastle('green')">
+        <div [ngClass]="{'fade': castles.green}"></div>
+        <div *ngIf="castles.green" class="king green-king"></div>
+    </div>
+    <div class="castle" [ngClass]="{'fade': castles.yellow}" id="yellow-castle" (click)="selectCastle('yellow')">
+        <div [ngClass]="{'fade': castles.yellow}"></div>
+        <div *ngIf="castles.yellow" class="king yellow-king"></div>
+    </div>
+    <div class="castle" [ngClass]="{'fade': castles.blue}" id="blue-castle" (click)="selectCastle('blue')">
+        <div [ngClass]="{'fade': castles.blue}"></div>
+        <div *ngIf="castles.blue" class="king blue-king"></div>
+    </div>
 </div>
 
 <div class="players">
-
+    <ng-container *ngFor="let player of playerInfo.players; let i = index">
+        <div class="player" id="player-{{ i }}">
+            <img 
+                [ngClass]="{'player-not-connected': player.pseudo}"
+                [ngStyle]="{
+                    'background-color': (player.color)? '$' + player.color : 'none'
+                }"
+                src="assets/images/head-icon.png" 
+                alt="head icon"
+            >
+            <div class="label">{{ player.pseudo }}</div>
+            <button *ngIf="player.pseudo === playerInfo.player.pseudo; else ready"
+                class="validate"
+                [disabled]="!player.color"
+                (click)="isReady()"
+            >{{ (player.readyToPlay)? 'Annuler' : 'Prêt' }}</button>
+            <ng-template #ready>
+                <div *ngIf="player.readyToPlay" class="ready"></div>
+            </ng-template>
+        </div>
+    </ng-container>
 </div>
 
 <app-rules-explained></app-rules-explained>

@@ -22,7 +22,7 @@ export class HomeComponent {
 
   goToLobby(pseudo: string): void {
     this.closeDialog();
-    this.playerInfo.newPlayer(pseudo).subscribe();
+    this.playerInfo.newPlayer(pseudo);
     this.playerInfo.player.canAccessToLobby = true;
     this.router.navigate(['/', 'lobby']);
   }
