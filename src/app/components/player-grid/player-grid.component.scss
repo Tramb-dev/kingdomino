@@ -1,0 +1,49 @@
+.grille {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.case,
+.chateau {
+  width: 100px;
+  height: 100px;
+}
+
+.chateau {
+  background-image: url("../../../assets/tiles.webp");
+}
+
+#chateau-rouge {
+  background-position: 205px 205px;
+}
+
+#chateau-jaune {
+  background-position: 205px 103px;
+}
+
+#chateau-bleu {
+  background-position: 103px 103px;
+}
+
+#chateau-vert {
+  background-position: 103px 205px;
+}
+
+.drop-target {
+  background-color: lavender;
+}
+
+.focus {
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+.domino {
+  width: 200px;
+  height: 100px;
+  background-image: url("../../../assets/tiles.webp");
+}

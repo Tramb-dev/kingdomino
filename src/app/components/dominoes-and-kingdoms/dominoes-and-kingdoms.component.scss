@@ -1,0 +1,29 @@
+.domino {
+  width: 200px;
+  height: 100px;
+  transition: transform 0.5s ease;
+  display: flex;
+  outline: 1px solid rgba(0, 0, 0, 0.3);
+  background-image: url("../../../assets/tiles.webp");
+
+  .arrow.rotate-left {
+    transform: scaleX(-1);
+    right: 100px;
+  }
+
+  .arrow.rotate-right {
+    left: 100px;
+  }
+
+  .arrow {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    cursor: pointer;
+    margin: auto;
+  }
+}

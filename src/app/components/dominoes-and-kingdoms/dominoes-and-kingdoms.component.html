@@ -1,0 +1,8 @@
+<div class="domino" [style.transform]="'rotate(' + dominoService.dominoes[dominoService.selectedDomino].rotate + 'deg)'">
+    <div>
+        <img class="arrow rotate-left" src="assets/rotate.svg" (click)="rotate(1)">
+    </div>
+    <div>
+        <img class="arrow rotate-right" src="assets/rotate.svg" (click)="rotate(-1)">
+    </div>
+</div>

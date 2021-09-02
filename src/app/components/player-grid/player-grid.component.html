@@ -1,0 +1,18 @@
+<div class="grille">
+    <div *ngFor="let row of dominoService.grille" class="row">
+      <div *ngFor="let case of row" class="col">
+        <div 
+          *ngIf="case.isDroppable && case.exists" 
+          class="case drop-target" 
+          [ngClass]="{'domino': case.hover}" 
+          [style.transform]="'rotate(' + dominoService.dominoes[dominoService.selectedDomino].rotate + 'deg)'"
+          (mouseover)="mouseOver($event)" 
+          (mouseleave)="mouseLeave($event)" 
+          [attr.data-col]="case.position.colonne" 
+          [attr.data-row]="case.position.ligne"
+        ></div>
+        <div *ngIf="!case.isDroppable && case.contenu !== 'chateau'" [ngClass]="{'case': case.contenu === null}"></div>
+        <div *ngIf="case.contenu === 'chateau'" [ngClass]="'chateau'" [id]="'chateau-' + playerColor"></div>
+      </div>
+    </div>
+</div>

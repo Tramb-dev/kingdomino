@@ -1,0 +1,13 @@
+<div class="modal">
+    <h2>Choisissez votre pseudo</h2>
+    <form #modalForm="ngForm" (ngSubmit)="validateForm(modalForm)">
+        <div>
+            <input type="text" placeholder="Pseudonyme" name="pseudo" [(ngModel)]="pseudo" #pseudonyme="ngModel" required minlength="3">
+            <div *ngIf="pseudonyme.errors?.minlength" class="error">Veuillez rentrer au moins 3 caractères.</div>
+        </div>
+        <div class="buttons">
+            <input type="button" value="Annuler" (click)="close()">
+            <input type="submit" value="C'est parti !" [disabled]="modalForm.invalid">
+        </div>
+    </form>
+</div>

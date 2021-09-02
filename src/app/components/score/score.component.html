@@ -1,0 +1,8 @@
+<div class="score-container">
+    <div *ngFor="let score of scoreService.scoreSheet" class="individual-score">
+        <div class="bandeau" [ngStyle]="{'background-color': score.color}"></div>
+        <p>
+            <span class="pseudo">{{ score.pseudo }}</span>&nbsp;: {{ score.score }}
+        </p>
+    </div>
+</div>

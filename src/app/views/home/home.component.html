@@ -1,0 +1,9 @@
+<main>
+    <h1>Bienvenue sur Kingdomino</h1>
+    <app-score></app-score>
+    <div>
+        <button (click)="openDialog()">Jouer !</button>
+    </div>
+</main>
+<app-rules-explained></app-rules-explained>
+<app-modal *ngIf="modalOpened" (modalClose)="closeDialog()" (modalEvent)="goToLobby($event)"></app-modal>
