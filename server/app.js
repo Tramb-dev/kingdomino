@@ -1,5 +1,4 @@
 const express = require("express");
-const db = require("./db");
 const path = require("path");
 
 const webSocketServer = require("socket.io")();

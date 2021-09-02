@@ -1,16 +1,20 @@
+const db = require("./db");
+
 // TODO: réaliser un vrai scoring
-const scoreSheet = [
+/* const scoreSheet = [
   {
     pseudo: "Tramb",
     score: 28,
     color: "blue",
+    date: "test",
   },
   {
     pseudo: "Aramina",
     score: 20,
     color: "pink",
+    date: "test",
   },
-];
+]; */
 
 const room = [
   {
@@ -29,7 +33,13 @@ module.exports = (webSocketServer) => {
 
     // Envoi le tableau de score
     socket.on("getScore", () => {
-      socket.emit("getScore", scoreSheet);
+      db.getScore()
+        .then((result) => {
+          socket.emit("getScore", result);
+        })
+        .catch((err) => {
+          console.error(`Something went wrong ${err}`);
+        });
     });
 
     // Lors de l'arrivée d'un nouveau joueur, vérifie si le nom est déjà pris
