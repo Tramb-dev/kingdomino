@@ -104,12 +104,8 @@ $blue: #01798e;
       margin: 10px;
     }
 
-    .validate {
-      width: 55px;
-
-      &:hover {
-        box-shadow: 2px 2px 12px 0 rgba(110, 110, 110, 0.4);
-      }
+    .validate:hover {
+      box-shadow: 2px 2px 12px 0 rgba(110, 110, 110, 0.4);
     }
 
     .ready {

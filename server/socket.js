@@ -1,31 +1,19 @@
 const db = require("./db");
-
-// TODO: réaliser un vrai scoring
-/* const scoreSheet = [
-  {
-    pseudo: "Tramb",
-    score: 28,
-    color: "blue",
-    date: "test",
-  },
-  {
-    pseudo: "Aramina",
-    score: 20,
-    color: "pink",
-    date: "test",
-  },
-]; */
+const uuid = require("uuid");
+const Game = require("./Game");
 
 const room = [
   {
     pseudo: "Tramb",
     color: "blue",
     uid: "1",
-    readyToPlay: false,
+    readyToPlay: true,
   },
 ];
 
 const chalk = require("chalk");
+// Réaliser une instance du jeu par salon
+game = new Game(4);
 
 module.exports = (webSocketServer) => {
   webSocketServer.on("connection", (socket) => {
@@ -44,15 +32,22 @@ module.exports = (webSocketServer) => {
 
     // Lors de l'arrivée d'un nouveau joueur, vérifie si le nom est déjà pris
     // et le modifie si nécessaire avant de renvoyer la liste des joueurs
-    socket.on("newPlayer", (newPlayer) => {
-      const pseudo = testPseudo(newPlayer.pseudo);
-      room.push({
+    socket.on("newPlayer", (pseudo) => {
+      pseudo = testPseudo(pseudo);
+      const newPlayer = {
         pseudo: pseudo,
-        uid: newPlayer.uid,
+        color: "",
+        uid: uuid.v4(),
         sid: socket.id,
         readyToPlay: false,
-      });
+        canAccessToLobby: true,
+        canAccessToGame: false,
+        score: 0,
+      };
 
+      room.push(newPlayer);
+
+      socket.emit("newPlayer", newPlayer);
       webSocketServer.emit("players", sendPlayers());
     });
 
@@ -67,16 +62,18 @@ module.exports = (webSocketServer) => {
     });
 
     // Le joueur annonce qu'il est prêt à jouer
-    socket.on("playerIsReady", (playerIsReady) => {
-      const player = findPlayer(playerIsReady.uid, socket.id);
+    socket.on("playerIsReady", (playerUId) => {
+      const player = findPlayer(playerUId, socket.id);
 
       if (player) {
         player.readyToPlay = !player.readyToPlay;
         webSocketServer.emit("players", sendPlayers());
 
-        // Si tous les joueurs sont prêt, on démarre le jeu
+        // Si tous les joueurs sont prêts, on démarre le jeu
         if (room.every((player) => player.readyToPlay === true)) {
           webSocketServer.emit("startGame");
+          webSocketServer.emit("currentDominoes", game.initDominoes());
+          const playerOrder = game.sortPlayers();
         }
       }
     });
@@ -128,7 +125,7 @@ function sendPlayers() {
 
 /**
  * Cherche un joueur dans le salon avec ses identifiants
- * @param {*} uid l'identifiant généré par le client
+ * @param {*} uid l'identifiant généré par uuid
  * @param {*} sid l'identifiant généré par la connexion WebSocket
  * @returns Un objet représentant le joueur cherché ou undefined
  */

@@ -1,0 +1,541 @@
+[
+  {
+    "numero": 1,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 2,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 3,
+    "left": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 4,
+    "left": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 5,
+    "left": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 6,
+    "left": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 7,
+    "left": {
+      "couronnes": 0,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "eau"
+    }
+  },
+  {
+    "numero": 8,
+    "left": {
+      "couronnes": 0,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "eau"
+    }
+  },
+  {
+    "numero": 9,
+    "left": {
+      "couronnes": 0,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "eau"
+    }
+  },
+  {
+    "numero": 10,
+    "left": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 11,
+    "left": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 12,
+    "left": {
+      "couronnes": 0,
+      "terrain": "marais"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "marais"
+    }
+  },
+  {
+    "numero": 13,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 14,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "eau"
+    }
+  },
+  {
+    "numero": 15,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 16,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "marais"
+    }
+  },
+  {
+    "numero": 17,
+    "left": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "eau"
+    }
+  },
+  {
+    "numero": 18,
+    "left": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 18,
+    "left": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 19,
+    "left": {
+      "couronnes": 1,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 20,
+    "left": {
+      "couronnes": 1,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "eau"
+    }
+  },
+  {
+    "numero": 21,
+    "left": {
+      "couronnes": 1,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 22,
+    "left": {
+      "couronnes": 1,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "marais"
+    }
+  },
+  {
+    "numero": 23,
+    "left": {
+      "couronnes": 1,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "mine"
+    }
+  },
+  {
+    "numero": 24,
+    "left": {
+      "couronnes": 1,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 25,
+    "left": {
+      "couronnes": 1,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 26,
+    "left": {
+      "couronnes": 1,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 27,
+    "left": {
+      "couronnes": 1,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 28,
+    "left": {
+      "couronnes": 1,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "eau"
+    }
+  },
+  {
+    "numero": 29,
+    "left": {
+      "couronnes": 1,
+      "terrain": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 30,
+    "left": {
+      "couronnes": 1,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 31,
+    "left": {
+      "couronnes": 1,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 32,
+    "left": {
+      "couronnes": 1,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 33,
+    "left": {
+      "couronnes": 1,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 34,
+    "left": {
+      "couronnes": 1,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 35,
+    "left": {
+      "couronnes": 1,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "forêt"
+    }
+  },
+  {
+    "numero": 36,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 1,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 37,
+    "left": {
+      "couronnes": 0,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 1,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 38,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 1,
+      "terrain": "marais"
+    }
+  },
+  {
+    "numero": 39,
+    "left": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    },
+    "right": {
+      "couronnes": 1,
+      "terrain": "marais"
+    }
+  },
+  {
+    "numero": 40,
+    "left": {
+      "couronnes": 1,
+      "terrain": "mine"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 41,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 2,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 42,
+    "left": {
+      "couronnes": 0,
+      "terrain": "eau"
+    },
+    "right": {
+      "couronnes": 2,
+      "terrain": "prairie"
+    }
+  },
+  {
+    "numero": 43,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 2,
+      "terrain": "marais"
+    }
+  },
+  {
+    "numero": 44,
+    "left": {
+      "couronnes": 0,
+      "terrain": "prairie"
+    },
+    "right": {
+      "couronnes": 2,
+      "terrain": "marais"
+    }
+  },
+  {
+    "numero": 45,
+    "left": {
+      "couronnes": 2,
+      "terrain": "mine"
+    },
+    "right": {
+      "couronnes": 0,
+      "terrain": "blé"
+    }
+  },
+  {
+    "numero": 46,
+    "left": {
+      "couronnes": 0,
+      "terrain": "marais"
+    },
+    "right": {
+      "couronnes": 2,
+      "terrain": "mine"
+    }
+  },
+  {
+    "numero": 47,
+    "left": {
+      "couronnes": 0,
+      "terrain": "marais"
+    },
+    "right": {
+      "couronnes": 2,
+      "terrain": "mine"
+    }
+  },
+  {
+    "numero": 48,
+    "left": {
+      "couronnes": 0,
+      "terrain": "blé"
+    },
+    "right": {
+      "couronnes": 3,
+      "terrain": "mine"
+    }
+  }
+]
