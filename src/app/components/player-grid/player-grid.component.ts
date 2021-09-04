@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PlayerInfoService } from 'src/app/services/player-info.service';
 import { DominoesService } from 'src/app/services/dominoes.service';
 
 @Component({
@@ -9,12 +10,16 @@ import { DominoesService } from 'src/app/services/dominoes.service';
 export class PlayerGridComponent implements OnInit {
   playerColor: string = 'jaune'; // jaune, vert, rouge, bleu
 
-  constructor(public dominoService: DominoesService) { }
+  constructor(
+    public playerInfo: PlayerInfoService,
+    public dominoService: DominoesService
+    ) { }
 
   ngOnInit(): void {
     if (this.dominoService.grille.length === 0) {
       this.dominoService.createGrille();
     }
+    this.playerColor = 'castle-' + this.playerInfo.player.color;
   }
 
   /**

@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+
+import { LogsService } from 'src/app/services/logs.service';
 
 @Component({
   selector: 'app-page-title',
   templateUrl: './page-title.component.html',
   styleUrls: ['./page-title.component.scss']
 })
-export class PageTitleComponent implements OnInit {
+export class PageTitleComponent {
+  messageToDisplay: string;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(public logsService: LogsService) {
+    this.messageToDisplay = logsService.messageToDisplay;
   }
 
 }

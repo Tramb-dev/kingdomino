@@ -30,6 +30,11 @@
                 src="assets/images/head-icon.png" 
                 alt="head icon"
             >
+            <div 
+                *ngIf="player.color != ''" 
+                class="king {{ player.color }}-king"
+            >
+            </div>
             <div class="label">{{ player.pseudo }}</div>
             <button *ngIf="player.pseudo === playerInfo.player.pseudo; else ready"
                 class="validate"

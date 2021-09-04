@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Player } from 'src/app/interfaces/player';
 import { Socket } from 'ngx-socket-io';
-import { share, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+
+import { WebsocketService } from './websocket.service';
+
+import { Castles } from '../interfaces/castles';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +13,62 @@ import { Observable } from 'rxjs';
 export class PlayerInfoService {
   public player: Player = {
     pseudo: '',
-    color: '',
+    color: 'green',
     score: 0,
     canAccessToLobby: true, // TODO: changer la valeur à false
     canAccessToGame: false,
     readyToPlay: false
   };
   public players: Player[] = [];
-  public playersFromServer$: Observable<Player[]> = this.socket.fromEvent('players').pipe(
-    tap((result: any) => this.players = result),
-    share()
-  );
-  public startGameMessage: Promise<string> = this.socket.fromOneTimeEvent('startGame');
+  private myPlayerSubscription: Subscription;
+  private allPlayersSubscription: Subscription;
+  public castles: Castles = {
+    pink: false,
+    green: false,
+    yellow: false,
+    blue: 'Tramb'
+  };
 
-  constructor(private socket: Socket) { }
+  constructor(
+    private socket: Socket, 
+    private websocket: WebsocketService
+  ) {
+      // TODO: Pour test uniquement
+    this.players = [
+      {
+        pseudo: "Tramb",
+        color: "blue",
+        uid: "1",
+        readyToPlay: true,
+      },
+      {
+        pseudo: "test",
+        color: "green",
+        uid: "2",
+        readyToPlay: false,
+      },
+    ]
+
+    this.myPlayerSubscription = this.websocket.player$.subscribe(
+      value => {
+        this.player = value;
+      }
+    );
+    this.allPlayersSubscription = this.websocket.playersFromServer$.subscribe(
+      value => {
+        this.players = value;
+        // On remet tous les châteaux à false avant de leur donner la vraie valeur
+        for(let castle in this.castles) {
+          this.castles[castle] = false;
+        }
+        value.forEach(player => {
+          if(player.color) {
+            this.castles[player.color] = player.pseudo;
+          }
+        })
+      }
+    );
+  }
 
   /**
    * Envoi le pseudo du nouveau joueur au serveur
@@ -31,11 +76,12 @@ export class PlayerInfoService {
    */
   newPlayer(pseudo: string): void {
     this.socket.emit('newPlayer', pseudo);
-    this.socket.fromOneTimeEvent('newPlayer').then((returnedPlayer: any) => {
-      this.player = returnedPlayer;
-    });
   }
 
+  /**
+   * Envoi la couleur choisit par le joueur
+   * @param color la couleur choisit
+   */
   chosenColor(color: string): void {
     this.socket.emit('chosenColor', {
       uid: this.player.uid,
@@ -43,6 +89,9 @@ export class PlayerInfoService {
     });
   }
 
+  /**
+   * Envoi au serveur que le joueur est prêt
+   */
   playerIsReady(): void {
     this.socket.emit('playerIsReady', this.player.uid);
   }

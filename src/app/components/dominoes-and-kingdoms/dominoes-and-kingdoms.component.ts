@@ -7,15 +7,22 @@ import { DominoesService } from 'src/app/services/dominoes.service';
   styleUrls: ['./dominoes-and-kingdoms.component.scss']
 })
 export class DominoesAndKingdomsComponent implements OnInit {
+  currentDominoes: number[] = [];
 
-  constructor(public dominoService: DominoesService) { }
+  constructor(public dominoService: DominoesService) {
+    this.currentDominoes = dominoService.currentDominoes;
+  }
 
   ngOnInit(): void {
   }
 
   rotate(direction: number): void {
-    this.dominoService.dominoes[this.dominoService.selectedDomino].orientation += direction;
-    this.dominoService.dominoes[this.dominoService.selectedDomino].rotate += direction * 90;
+    const domino = this.dominoService.dominoes[this.dominoService.selectedDomino];
+    domino.orientation += direction;
+    if(!domino.rotate) {
+      domino.rotate = 0;
+    }
+    domino.rotate += direction * 90;
   }
 
 }

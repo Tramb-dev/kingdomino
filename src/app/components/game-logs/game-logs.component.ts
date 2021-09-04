@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PlayerInfoService } from 'src/app/services/player-info.service';
+import { DominoesService } from 'src/app/services/dominoes.service';
 
 @Component({
   selector: 'app-game-logs',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./game-logs.component.scss']
 })
 export class GameLogsComponent implements OnInit {
+  logs = [];
 
-  constructor() { }
+  constructor(
+    private playerInfo: PlayerInfoService,
+    private dominoesService: DominoesService
+  ) { }
 
   ngOnInit(): void {
+    
   }
 
 }

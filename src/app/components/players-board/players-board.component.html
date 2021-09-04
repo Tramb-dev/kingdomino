@@ -1,1 +1,5 @@
-<p>players-board works!</p>
+<div *ngFor="let player of playerInfo.players" class="player {{ player.color }}">
+    <div class="player-info">
+        <span class="player-pseudo">{{ player.pseudo }}</span> <span *ngIf="player.score" class="player-score"> - {{ player.score }}</span>
+    </div>
+</div>

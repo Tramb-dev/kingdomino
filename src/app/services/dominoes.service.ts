@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Domino, Case } from '../interfaces/interfaces';
+
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -200,7 +203,29 @@ export class DominoesService {
     },
   ];
 
-  constructor() { }
+  // Les dominos sur lesquels on peut jouer
+  public currentDominoes: number[] = [];
+  private currentDominoesSubscription: Subscription;
+  
+  // Les prochains dominos à choisir
+  public nextDominoes: number[] = [];
+  private nextDominoesSubscription: Subscription;
+
+  constructor(private websocket: WebsocketService) {
+    this.currentDominoesSubscription = this.websocket.currentDominoes$.subscribe(
+      value => {
+        this.currentDominoes = value;
+        console.log('currentDominoes', this.currentDominoes);
+      }
+    );
+
+    this.nextDominoesSubscription = this.websocket.nextDominoes$.subscribe(
+      value => {
+        this.nextDominoes = value;
+        console.log('nextDominoes', this.nextDominoes);
+      }
+    );
+  }
 
   createGrille(): void {
     if (this.grille.length === 0) {

@@ -1,7 +1,4 @@
-$pink: #e05f81;
-$green: #157722;
-$yellow: #fbb305;
-$blue: #01798e;
+@import "./src/scss/variables";
 
 .message h1 {
   text-align: center;
@@ -46,30 +43,13 @@ $blue: #01798e;
     background-position: 103px 205px;
   }
 
-  .fade {
-    background-color: rgba(110, 110, 110, 0.4);
-  }
-
   .king {
-    background-image: url("../../../assets/images/kings.webp");
-    width: 57px;
-    height: 70px;
-    position: absolute;
-    z-index: 100;
     left: 21.5px;
     top: 15px;
   }
 
-  .pink-king {
-    background-position: 33.3%;
-  }
-
-  .yellow-king {
-    background-position: 66.6%;
-  }
-
-  .blue-king {
-    background-position-x: 100%;
+  .fade {
+    background-color: rgba(110, 110, 110, 0.4);
   }
 }
 
@@ -83,11 +63,16 @@ $blue: #01798e;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 
     img {
       border-radius: 50%;
       border: rgba(110, 110, 110, 0.4) 2px dotted;
       width: 80px;
+    }
+
+    .king {
+      top: 4px;
     }
 
     .label {
@@ -116,4 +101,25 @@ $blue: #01798e;
       box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     }
   }
+}
+
+.king {
+  background-image: url("../../../assets/images/kings.webp");
+  width: 57px;
+  height: 70px;
+  position: absolute;
+  z-index: 100;
+  filter: drop-shadow(4px 4px 4px black);
+}
+
+.pink-king {
+  background-position: 33.3%;
+}
+
+.yellow-king {
+  background-position: 66.6%;
+}
+
+.blue-king {
+  background-position-x: 100%;
 }

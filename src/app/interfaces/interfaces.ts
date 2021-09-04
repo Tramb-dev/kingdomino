@@ -17,13 +17,13 @@ export interface CaseDomino {
 
 export interface Domino {
     orientation: number;
-    rotate: number;
+    rotate?: number;
     numero: number;
     cases: {
         left: CaseDomino;
         right: CaseDomino;
     };
-    imgPosition: {
+    imgPosition?: {
         top: number;
         left: number;
     }

@@ -12,7 +12,7 @@
           [attr.data-row]="case.position.ligne"
         ></div>
         <div *ngIf="!case.isDroppable && case.contenu !== 'chateau'" [ngClass]="{'case': case.contenu === null}"></div>
-        <div *ngIf="case.contenu === 'chateau'" [ngClass]="'chateau'" [id]="'chateau-' + playerColor"></div>
+        <div *ngIf="case.contenu === 'chateau'" [ngClass]="'castle'" [id]="playerColor"></div>
       </div>
     </div>
 </div>
