@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 import { WebsocketService } from './websocket.service';
 
@@ -834,28 +833,12 @@ export class DominoesService {
 
   // Les dominos sur lesquels on peut jouer
   public currentDominoes: Domino[] = [];
-  //private currentDominoesSubscription: Subscription;
 
   // Les prochains dominos à choisir
   public nextDominoes: Domino[] = [];
-  private nextDominoesSubscription: Subscription;
+  public nextDominoesSubscription: Subscription;
 
-  constructor(private websocket: WebsocketService, private http: HttpClient) {
-    /* this.currentDominoesSubscription = this.websocket.currentDominoes$
-      .pipe(
-        map((x: number[]) => {
-          const completeCurrentDominoes: Domino[] = [];
-          for (let i = 0; i < x.length; i++) {
-            const index = x[i] - 1;
-            completeCurrentDominoes.push(this.allDominoes[index]);
-          }
-          return completeCurrentDominoes;
-        })
-      )
-      .subscribe((value) => {
-        this.currentDominoes = value;
-      }); */
-
+  constructor(private websocket: WebsocketService) {
     this.nextDominoesSubscription = this.websocket.nextDominoes$
       .pipe(
         map((x: number[]) => {

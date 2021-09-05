@@ -1,7 +1,7 @@
 module.exports = class Players {
   playerOrder = [];
   nextTurnPlayerOrder = [];
-  currentPlayer;
+  currentPlayer = {};
 
   room = [
     {
@@ -23,6 +23,7 @@ module.exports = class Players {
     canAccessToLobby: boolean;
     canAccessToGame: boolean;
     score: number;
+    canPlaceKing: boolean;
   }
 
   */
@@ -92,9 +93,12 @@ module.exports = class Players {
    * Renvoi le prochain joueur à jouer
    */
   nextPlayer() {
+    this.currentPlayer.canPlaceKing = false;
+
     const index = this.playerOrder.shift();
     this.currentPlayer = this.room[index];
     this.currentPlayer.index = index;
+    this.currentPlayer.canPlaceKing = true;
     return this.currentPlayer;
   }
 

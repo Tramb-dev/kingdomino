@@ -43,6 +43,7 @@ module.exports = (io) => {
           canAccessToLobby: true,
           canAccessToGame: false,
           score: 0,
+          canPlaceKing: false,
         };
 
         playersModule.room.push(newPlayer);
@@ -112,7 +113,8 @@ module.exports = (io) => {
     socket.on("chosenDomino", (numero) => {
       if (
         socket.id === playersModule.currentPlayer.sid &&
-        game.findDomino(numero)
+        game.findDomino(numero) &&
+        playersModule.currentPlayer.canPlaceKing
       ) {
         game.playerHasPickedDomino(numero, playersModule.currentPlayer);
 
@@ -124,15 +126,20 @@ module.exports = (io) => {
           playersModule.nextPlayer();
         } else {
           io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
-          const nextPlayer = playersModule.nextPlayer();
-          io.to(rooms[0]).emit("message", {
-            type: "turnOf",
-            data: nextPlayer.pseudo,
-          });
-          io.to(nextPlayer.sid).emit("message", {
-            type: "yourTurn",
-            data: nextPlayer.pseudo,
-          });
+          if (game.turn === 0) {
+            const nextPlayer = playersModule.nextPlayer();
+            io.to(rooms[0]).emit("message", {
+              type: "turnOf",
+              data: nextPlayer.pseudo,
+            });
+            io.to(nextPlayer.sid).emit("message", {
+              type: "yourTurn",
+              data: nextPlayer.pseudo,
+            });
+          } else {
+            socket.emit("chooseDomino");
+            playersModule.currentPlayer.canPlaceKing = false;
+          }
         }
       }
     });
