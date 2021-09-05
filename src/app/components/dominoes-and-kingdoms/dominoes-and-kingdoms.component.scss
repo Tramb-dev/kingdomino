@@ -5,6 +5,9 @@
   display: flex;
   outline: 1px solid rgba(0, 0, 0, 0.3);
   background-image: url("../../../assets/images/tiles.webp");
+  margin: 6px auto;
+  box-shadow: 4px 4px 7px 5px rgba(70, 70, 70, 0.4);
+  position: relative;
 
   .arrow.rotate-left {
     transform: scaleX(-1);

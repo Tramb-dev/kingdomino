@@ -5,6 +5,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { DominoComponent } from './components/domino/domino.component';
@@ -49,6 +50,7 @@ const config: SocketIoConfig = {
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     FormsModule,
     SocketIoModule.forRoot(config),

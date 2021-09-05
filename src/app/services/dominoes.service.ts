@@ -1,226 +1,863 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Domino, Case } from '../interfaces/interfaces';
+import { HttpClient } from '@angular/common/http';
 
 import { WebsocketService } from './websocket.service';
 
+import { Domino, Case } from '../interfaces/interfaces';
+import { map, tap } from 'rxjs/operators';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DominoesService {
   grille: Case[][] = [];
   selectedDomino: number = 1;
-  dominoes: Domino[] = [
+  private allDominoes: Domino[] = [
     {
+      numero: 1,
       orientation: 0,
       rotate: 0,
-      numero: 1,
-      cases: {
-        left: {
-          contenu: "ble",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "ble",
-          nbCouronnes: 0,
-        }
+      position: {
+        left: 0,
+        top: 0,
       },
-      imgPosition: {
-        top: 100,
-        left: 0
-      }
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
     },
     {
-      orientation: 0,
-      rotate: 0,
       numero: 2,
-      cases: {
-        left: {
-          contenu: "ble",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "ble",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 200,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
+      position: {
+        left: 0,
+        top: -110,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
       numero: 3,
-      cases: {
-        left: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 300,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
+      position: {
+        left: 0,
+        top: -220,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
       numero: 4,
-      cases: {
-        left: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 400,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
+      position: {
+        left: 0,
+        top: -330,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
       numero: 5,
-      cases: {
-        left: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 500,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
+      position: {
+        left: 0,
+        top: -440,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
       numero: 6,
-      cases: {
-        left: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "foret",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 600,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
+      position: {
+        left: 0,
+        top: -550,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
       numero: 7,
-      cases: {
-        left: {
-          contenu: "eau",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "eau",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 700,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
+      position: {
+        left: 0,
+        top: -660,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+    },
+    {
       numero: 8,
-      cases: {
-        left: {
-          contenu: "eau",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "eau",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 800,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
+      position: {
+        left: 0,
+        top: -770,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+    },
+    {
       numero: 9,
-      cases: {
-        left: {
-          contenu: "eau",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "eau",
-          nbCouronnes: 0,
-        }
-      },
-      imgPosition: {
-        top: 900,
-        left: 0
-      }
-    },
-    {
       orientation: 0,
       rotate: 0,
-      numero: 1,
-      cases: {
-        left: {
-          contenu: "prairie",
-          nbCouronnes: 0,
-        },
-        right: {
-          contenu: "prairie",
-          nbCouronnes: 0,
-        }
+      position: {
+        left: 0,
+        top: -880,
       },
-      imgPosition: {
-        top: 1000,
-        left: 0
-      }
+      left: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+    },
+    {
+      numero: 10,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: 0,
+        top: -990,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 11,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: 0,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 12,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -110,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'marais',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'marais',
+      },
+    },
+    {
+      numero: 13,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -220,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
+      numero: 14,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -330,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+    },
+    {
+      numero: 15,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -440,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 16,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -550,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'marais',
+      },
+    },
+    {
+      numero: 17,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -660,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+    },
+    {
+      numero: 18,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -770,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 19,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -880,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
+      numero: 20,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -210,
+        top: -990,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+    },
+    {
+      numero: 21,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: 0,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 22,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -110,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'marais',
+      },
+    },
+    {
+      numero: 23,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -220,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'mine',
+      },
+    },
+    {
+      numero: 24,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -330,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 25,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -440,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 26,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -550,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 27,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -660,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 28,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -770,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+    },
+    {
+      numero: 29,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -880,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 30,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -990,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 31,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: 0,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 32,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -110,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
+      numero: 33,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -220,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
+      numero: 34,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -330,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
+      numero: 35,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -440,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'forêt',
+      },
+    },
+    {
+      numero: 36,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -550,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 1,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 37,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -660,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 1,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 38,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -770,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 1,
+        contenu: 'marais',
+      },
+    },
+    {
+      numero: 39,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -880,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+      right: {
+        couronnes: 1,
+        contenu: 'marais',
+      },
+    },
+    {
+      numero: 40,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -622,
+        top: -990,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'mine',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 41,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: 0,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 2,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 42,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: -110,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'eau',
+      },
+      right: {
+        couronnes: 2,
+        contenu: 'prairie',
+      },
+    },
+    {
+      numero: 43,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: -220,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 2,
+        contenu: 'marais',
+      },
+    },
+    {
+      numero: 44,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: -330,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'prairie',
+      },
+      right: {
+        couronnes: 2,
+        contenu: 'marais',
+      },
+    },
+    {
+      numero: 45,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: -440,
+      },
+      left: {
+        couronnes: 2,
+        contenu: 'mine',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+    {
+      numero: 46,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: -550,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'marais',
+      },
+      right: {
+        couronnes: 2,
+        contenu: 'mine',
+      },
+    },
+    {
+      numero: 47,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: -660,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'marais',
+      },
+      right: {
+        couronnes: 2,
+        contenu: 'mine',
+      },
+    },
+    {
+      numero: 48,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -832,
+        top: -770,
+      },
+      left: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+      right: {
+        couronnes: 3,
+        contenu: 'mine',
+      },
     },
   ];
 
   // Les dominos sur lesquels on peut jouer
-  public currentDominoes: number[] = [];
+  public currentDominoes: Domino[] = [];
   private currentDominoesSubscription: Subscription;
-  
+
   // Les prochains dominos à choisir
   public nextDominoes: number[] = [];
   private nextDominoesSubscription: Subscription;
 
-  constructor(private websocket: WebsocketService) {
-    this.currentDominoesSubscription = this.websocket.currentDominoes$.subscribe(
-      value => {
+  constructor(private websocket: WebsocketService, private http: HttpClient) {
+    this.currentDominoesSubscription = this.websocket.currentDominoes$
+      .pipe(
+        map((x: number[]) => {
+          const completeCurrentDominoes: Domino[] = [];
+          for (let i = 0; i < x.length; i++) {
+            const index = x[i] - 1;
+            completeCurrentDominoes.push(this.allDominoes[index]);
+          }
+          return completeCurrentDominoes;
+        })
+      )
+      .subscribe((value) => {
         this.currentDominoes = value;
-        console.log('currentDominoes', this.currentDominoes);
-      }
-    );
+      });
 
     this.nextDominoesSubscription = this.websocket.nextDominoes$.subscribe(
-      value => {
+      (value) => {
         this.nextDominoes = value;
         console.log('nextDominoes', this.nextDominoes);
       }
@@ -229,9 +866,9 @@ export class DominoesService {
 
   createGrille(): void {
     if (this.grille.length === 0) {
-      for (let ligne=0; ligne<5; ligne++) {
+      for (let ligne = 0; ligne < 5; ligne++) {
         const ligneDeGrille = [];
-        for (let colonne=0; colonne<5; colonne++) {
+        for (let colonne = 0; colonne < 5; colonne++) {
           const caseDeGrille: Case = {
             position: {
               colonne: colonne,
@@ -245,8 +882,18 @@ export class DominoesService {
           };
           if (ligne === 2 && colonne === 2) {
             // La case au milieu de la grille est un chateau
-            caseDeGrille.contenu = "chateau";
-          } else if ((colonne === 2 && (ligne === 0 || ligne === 1 || ligne === 3 || ligne === 4)) || (ligne === 2 && (colonne === 0 || colonne === 1 || colonne === 3 || colonne === 4)) || (colonne === 1 && (ligne === 1 || ligne === 3)) || (colonne === 3 && (ligne === 1 || ligne === 3))) {
+            caseDeGrille.contenu = 'chateau';
+          } else if (
+            (colonne === 2 &&
+              (ligne === 0 || ligne === 1 || ligne === 3 || ligne === 4)) ||
+            (ligne === 2 &&
+              (colonne === 0 ||
+                colonne === 1 ||
+                colonne === 3 ||
+                colonne === 4)) ||
+            (colonne === 1 && (ligne === 1 || ligne === 3)) ||
+            (colonne === 3 && (ligne === 1 || ligne === 3))
+          ) {
             // Les cases orthogonales du chateau sont droppables
             caseDeGrille.isDroppable = true;
           }

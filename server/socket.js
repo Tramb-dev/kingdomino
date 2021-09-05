@@ -71,25 +71,28 @@ module.exports = (io) => {
         io.to(rooms[0]).emit("allPlayers", playersModule.sendPlayers());
 
         // Si tous les joueurs sont prêts, on démarre le jeu
-        if (playersModule.room.every((player) => player.readyToPlay === true)) {
+        if (
+          playersModule.room.every((player) => player.readyToPlay === true) &&
+          playersModule.room.length > 1
+        ) {
+          game.gameLaunched = true;
           // Les joueurs sont trié aléatoirement puis le premier joueur est tiré
           playersModule.sortPlayers();
           playersModule.nextPlayer();
           io.to(rooms[0]).emit("startGame");
-          io.to(rooms[0]).emit(
-            "currentDominoes",
-            game.initDominoes(playersModule.room.length)
-          );
-          /* 
-          io.to(rooms[0]).emit("firstPlayer", ); */
         }
       }
     });
 
     socket.on("startGame", () => {
       if (
+        game.gameLaunched &&
         socket.id === playersModule.room[playersModule.currentPlayerNumber].sid
       ) {
+        io.to(rooms[0]).emit(
+          "currentDominoes",
+          game.initDominoes(playersModule.room.length)
+        );
         socket.to(rooms[0]).emit("message", {
           type: "isTurnOf",
           data: playersModule.room[playersModule.currentPlayerNumber].pseudo,
@@ -106,6 +109,7 @@ module.exports = (io) => {
 
     socket.on("disconnect", () => {
       console.log(chalk.yellow.italic("connection perdue"));
+      game.gameLaunched = false;
 
       const playerToDelete = playersModule.room.find((element) => {
         return element.sid === socket.id;

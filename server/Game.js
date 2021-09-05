@@ -1,6 +1,8 @@
 const Dominoes = require("./dominoes/Dominoes");
 
 module.exports = class Game extends Dominoes {
+  gameLaunched = false;
+
   constructor() {
     super();
   }

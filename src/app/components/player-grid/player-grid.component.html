@@ -5,7 +5,7 @@
           *ngIf="case.isDroppable && case.exists" 
           class="case drop-target" 
           [ngClass]="{'domino': case.hover}" 
-          [style.transform]="'rotate(' + dominoService.dominoes[dominoService.selectedDomino].rotate + 'deg)'"
+          
           (mouseover)="mouseOver($event)" 
           (mouseleave)="mouseLeave($event)" 
           [attr.data-col]="case.position.colonne" 

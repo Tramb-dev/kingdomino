@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const dominoes = require("./dominoes/dominoes.json");
 
 const webSocketServer = require("socket.io")();
 require("./socket")(webSocketServer);
@@ -9,10 +10,12 @@ const PORT = process.env.PORT || 8080;
 const ROOT = path.dirname(__dirname);
 const publicPath = path.normalize(ROOT + "/dist/kingdomino");
 
-const documents = {}; // A remplacer par la suite par la gestion en bdd
-
 app.use(express.static(publicPath));
 app.use("/assets/images", express.static(publicPath + "/assets"));
+
+app.get("/dominoes", (req, res) => {
+  res.json(dominoes);
+});
 
 app.use((req, res) => {
   res.sendFile(path.normalize(publicPath + "/index.html"));

@@ -46,7 +46,7 @@ export class PlayerGridComponent implements OnInit {
     const ligne: number = parseInt(event.target.dataset.row);
     const test = this.testOrthogonale(ligne, colonne);
 
-    if (Math.abs(this.dominoService.dominoes[this.dominoService.selectedDomino].orientation) % 2 === 0){
+    /* if (Math.abs(this.dominoService.allDominoes[this.dominoService.selectedDomino].orientation) % 2 === 0){
       if(test.right) {
         this.dominoService.grille[ligne][colonne].hover = true;
         this.dominoService.grille[ligne][colonne+1].exists = false;
@@ -54,7 +54,7 @@ export class PlayerGridComponent implements OnInit {
         this.dominoService.grille[ligne][colonne].hover = true;
         this.dominoService.grille[ligne][colonne-1].exists = false;
       }
-    } else if (Math.abs(this.dominoService.dominoes[this.dominoService.selectedDomino].orientation) % 2 === 1) {
+    } else if (Math.abs(this.dominoService.allDominoes[this.dominoService.selectedDomino].orientation) % 2 === 1) {
       if(test.bottom) {
         this.dominoService.grille[ligne][colonne].hover = true;
         this.dominoService.grille[ligne+1][colonne].exists = false;
@@ -62,7 +62,7 @@ export class PlayerGridComponent implements OnInit {
         this.dominoService.grille[ligne][colonne].hover = true;
         this.dominoService.grille[ligne-1][colonne].exists = false;
       }
-    }
+    } */
   }  
   
   /**
@@ -74,7 +74,7 @@ export class PlayerGridComponent implements OnInit {
     const ligne: number = parseInt(event.target.dataset.row);
     const test = this.testOrthogonale(ligne, colonne);
 
-    if (this.dominoService.dominoes[this.dominoService.selectedDomino].orientation % 2 === 0){
+    /* if (this.dominoService.allDominoes[this.dominoService.selectedDomino].orientation % 2 === 0){
       if(test.right) {
         this.dominoService.grille[ligne][colonne].hover = false;
         this.dominoService.grille[ligne][colonne+1].exists = true;
@@ -82,7 +82,7 @@ export class PlayerGridComponent implements OnInit {
         this.dominoService.grille[ligne][colonne].hover = false;
         this.dominoService.grille[ligne][colonne-1].exists = true;
       }
-    } else if (Math.abs(this.dominoService.dominoes[this.dominoService.selectedDomino].orientation) % 2 === 1) {
+    } else if (Math.abs(this.dominoService.allDominoes[this.dominoService.selectedDomino].orientation) % 2 === 1) {
       if(test.bottom) {
         this.dominoService.grille[ligne][colonne].hover = false;
         this.dominoService.grille[ligne+1][colonne].exists = true;
@@ -90,7 +90,7 @@ export class PlayerGridComponent implements OnInit {
         this.dominoService.grille[ligne][colonne].hover = false;
         this.dominoService.grille[ligne-1][colonne].exists = true;
       }
-    }
+    } */
   }
 
 }

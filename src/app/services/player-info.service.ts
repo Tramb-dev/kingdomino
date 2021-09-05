@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Player } from 'src/app/interfaces/player';
 import { Socket } from 'ngx-socket-io';
 import { Subscription } from 'rxjs';
 
 import { WebsocketService } from './websocket.service';
 
+import { Player } from 'src/app/interfaces/player';
 import { Castles } from '../interfaces/castles';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class PlayerInfoService {
     pink: false,
     green: false,
     yellow: false,
-    blue: 'Tramb'
+    blue: false
   };
 
   constructor(
@@ -40,12 +40,6 @@ export class PlayerInfoService {
         color: "blue",
         uid: "1",
         readyToPlay: true,
-      },
-      {
-        pseudo: "test",
-        color: "green",
-        uid: "2",
-        readyToPlay: false,
       },
     ]
 

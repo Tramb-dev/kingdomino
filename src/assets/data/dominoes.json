@@ -198,6 +198,17 @@
     }
   },
   {
+    "numero": 18,
+    "left": {
+      "couronnes": 0,
+      "contenu": "forêt"
+    },
+    "right": {
+      "couronnes": 0,
+      "contenu": "prairie"
+    }
+  },
+  {
     "numero": 19,
     "left": {
       "couronnes": 1,
