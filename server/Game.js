@@ -20,15 +20,20 @@ module.exports = class Game extends Dominoes {
       player.canAccessToGame = true;
     });
 
+    this.playerModule.nextTurnPlayerOrder = Array.from({
+      length: this.numberOfDisplayedDominoes,
+    });
+
     return this.nextDominoes;
   }
 
   newTurn() {
     this.king = 0;
-    this.playerOrder = this.playerModule.nextTurnPlayerOrder;
-    this.playerModule.nextTurnPlayerOrder = Array.from({
-      length: this.numberOfDisplayedDominoes,
-    });
+    this.turn++;
+    this.playerModule.playerOrder = this.playerModule.placePlayersForNextTurn(
+      this.nextPickedDominoes
+    );
+
     this.nextPickedDominoes = Array.from(
       {
         length: this.numberOfDisplayedDominoes,
@@ -40,5 +45,6 @@ module.exports = class Game extends Dominoes {
   destroy() {
     this.gameLaunched = false;
     this.turn = 0;
+    this.king = 0;
   }
 };

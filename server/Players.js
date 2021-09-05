@@ -85,7 +85,7 @@ module.exports = class Players {
       [players[i], players[j]] = [players[j], players[i]];
     } 
     this.playerOrder = players;*/
-    this.playerOrder = [1, 0, 1, 0];
+    this.playerOrder = [1, 1, 1, 1];
   }
 
   /**
@@ -96,5 +96,12 @@ module.exports = class Players {
     this.currentPlayer = this.room[index];
     this.currentPlayer.index = index;
     return this.currentPlayer;
+  }
+
+  placePlayersForNextTurn(pickedDominoes) {
+    for (let i = 0; i < pickedDominoes.length; i++) {
+      this.nextTurnPlayerOrder[i] = pickedDominoes[i].player;
+    }
+    return this.nextTurnPlayerOrder;
   }
 };

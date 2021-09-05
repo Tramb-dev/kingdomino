@@ -110,18 +110,4 @@ module.exports = class Dominoes {
     };
     this.king++;
   }
-
-  /**
-   * Renvoi les dominos du tour suivant séléctionnés et le joueur l'ayant sélectionné
-   */
-  /* sendCurrentPickedDominoes() {
-    return this.pickedDominoes.map((element) => {
-      if (this.nextDominoes.includes(element.numero)) {
-        return {
-          numero: element.numero,
-          index: element.index,
-        };
-      }
-    });
-  } */
 };

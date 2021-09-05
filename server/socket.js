@@ -115,16 +115,25 @@ module.exports = (io) => {
         game.findDomino(numero)
       ) {
         game.playerHasPickedDomino(numero, playersModule.currentPlayer);
-        io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
-        const nextPlayer = playersModule.nextPlayer();
-        io.to(rooms[0]).emit("message", {
-          type: "turnOf",
-          data: nextPlayer.pseudo,
-        });
-        io.to(nextPlayer.sid).emit("message", {
-          type: "yourTurn",
-          data: nextPlayer.pseudo,
-        });
+
+        if (game.king === game.numberOfDisplayedDominoes) {
+          game.newTurn();
+          io.to(rooms[0]).emit("newTurn", game.turn);
+          io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
+          io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
+          playersModule.nextPlayer();
+        } else {
+          io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
+          const nextPlayer = playersModule.nextPlayer();
+          io.to(rooms[0]).emit("message", {
+            type: "turnOf",
+            data: nextPlayer.pseudo,
+          });
+          io.to(nextPlayer.sid).emit("message", {
+            type: "yourTurn",
+            data: nextPlayer.pseudo,
+          });
+        }
       }
     });
 
