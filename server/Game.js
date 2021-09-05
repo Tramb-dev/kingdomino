@@ -23,6 +23,20 @@ module.exports = class Game extends Dominoes {
     return this.nextDominoes;
   }
 
+  newTurn() {
+    this.king = 0;
+    this.playerOrder = this.playerModule.nextTurnPlayerOrder;
+    this.playerModule.nextTurnPlayerOrder = Array.from({
+      length: this.numberOfDisplayedDominoes,
+    });
+    this.nextPickedDominoes = Array.from(
+      {
+        length: this.numberOfDisplayedDominoes,
+      },
+      (v, k) => false
+    );
+  }
+
   destroy() {
     this.gameLaunched = false;
     this.turn = 0;

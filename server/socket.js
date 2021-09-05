@@ -32,22 +32,24 @@ module.exports = (io) => {
     // et le modifie si nécessaire avant de renvoyer la liste des joueurs
     // TODO: vérifier si le joueur n'existe pas déjà en mémoire avec son socket.id pour éviter les soucis de navigation
     socket.on("newPlayer", (pseudo) => {
-      pseudo = playersModule.testPseudo(pseudo);
-      const newPlayer = {
-        pseudo: pseudo,
-        color: "",
-        uid: uuid.v4(),
-        sid: socket.id,
-        readyToPlay: false,
-        canAccessToLobby: true,
-        canAccessToGame: false,
-        score: 0,
-      };
+      if (!game.gameLaunched) {
+        pseudo = playersModule.testPseudo(pseudo);
+        const newPlayer = {
+          pseudo: pseudo,
+          color: "",
+          uid: uuid.v4(),
+          sid: socket.id,
+          readyToPlay: false,
+          canAccessToLobby: true,
+          canAccessToGame: false,
+          score: 0,
+        };
 
-      playersModule.room.push(newPlayer);
+        playersModule.room.push(newPlayer);
 
-      socket.emit("myPlayer", newPlayer);
-      io.to(rooms[0]).emit("allPlayers", playersModule.sendPlayers());
+        socket.emit("myPlayer", newPlayer);
+        io.to(rooms[0]).emit("allPlayers", playersModule.sendPlayers());
+      }
     });
 
     // Le joueur choisit une couleur
@@ -103,20 +105,31 @@ module.exports = (io) => {
           type: "yourTurn",
           data: playersModule.currentPlayer.pseudo,
         });
-
-        /* socket.emit("chooseDomino", (data) => {
-          console.log(data);
-        }); */
       }
     });
 
     // Réception d'un choix de domino
-    socket.on("chooseDomino", (data) => {
-      if (socket.id === playersModule.currentPlayer.sid) {
+    socket.on("chosenDomino", (numero) => {
+      if (
+        socket.id === playersModule.currentPlayer.sid &&
+        game.findDomino(numero)
+      ) {
+        game.playerHasPickedDomino(numero, playersModule.currentPlayer);
+        io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
+        const nextPlayer = playersModule.nextPlayer();
+        io.to(rooms[0]).emit("message", {
+          type: "turnOf",
+          data: nextPlayer.pseudo,
+        });
+        io.to(nextPlayer.sid).emit("message", {
+          type: "yourTurn",
+          data: nextPlayer.pseudo,
+        });
       }
     });
 
     // Réception d'un positionnement de domino
+    //socket.on("placedDomino");
 
     socket.on("disconnect", () => {
       console.log(chalk.yellow.italic("connection perdue"));

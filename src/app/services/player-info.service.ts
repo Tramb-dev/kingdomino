@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { WebsocketService } from './websocket.service';
 
 import { Player } from 'src/app/interfaces/player';
 import { Castles } from 'src/app/interfaces/castles';
 import { Messages } from '../interfaces/messages';
+import { King } from '../interfaces/king';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,9 @@ export class PlayerInfoService {
   public allPlayersSubscription: Subscription;
   public playersOrderSubcription: Subscription;
   public playerMessageSubscription: Subscription;
+  public nextPickedDominoesSubscription: Subscription;
   public playersOrder: Player[] = [];
+  public kingsPosition: King[] = [];
   public myTurn: boolean = false;
   public castles: Castles = {
     pink: false,
@@ -67,9 +70,18 @@ export class PlayerInfoService {
 
     this.playersOrderSubcription = this.websocket.playersOrder$
       .pipe(
-        map((x: number[]) => {
+        tap((data: number[]) => {
+          for (let i = 0; i < data.length; i++) {
+            this.kingsPosition[i] = {
+              left: '81.5px',
+              top: i * (100 + 6) + 30 + 'px',
+              player: data[i],
+            };
+          }
+        }),
+        map((data: number[]) => {
           const switchNumberToPlayer: Player[] = [];
-          x.forEach((element) => {
+          data.forEach((element) => {
             switchNumberToPlayer.push(this.players[element]);
           });
           return switchNumberToPlayer;
@@ -88,6 +100,19 @@ export class PlayerInfoService {
         }
       }
     );
+
+    this.nextPickedDominoesSubscription =
+      this.websocket.nextPickedDominoes$.subscribe((data: any[]) => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i]) {
+            this.kingsPosition[data[i].king] = {
+              left: '368px',
+              top: i * (100 + 6) + 30 + 'px',
+              player: data[i].player,
+            };
+          }
+        }
+      });
   }
 
   /**
@@ -116,5 +141,11 @@ export class PlayerInfoService {
     this.socket.emit('playerIsReady', this.player.uid);
   }
 
-  sendChosenDomino(numero: number) {}
+  /**
+   * Envoi au serveur le domino choisit
+   * @param numero le numéro du domino choisit
+   */
+  sendChosenDomino(numero: number) {
+    this.socket.emit('chosenDomino', numero);
+  }
 }

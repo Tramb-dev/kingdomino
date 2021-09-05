@@ -28,7 +28,8 @@
         <div 
             *ngFor="let player of playerInfo.playersOrder; let i = index" 
             class="king {{ player.color }}-king"
-            [ngStyle]="{'left': kingsPosition[i].left, 'top': kingsPosition[i].top}"
+            [id]="'king-' + i"
+            [ngStyle]="{'left': playerInfo.kingsPosition[i].left, 'top': playerInfo.kingsPosition[i].top}"
         >
         </div>
     </div>

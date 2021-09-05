@@ -36,6 +36,9 @@ export class WebsocketService {
   // Lorsque le serveur signal que c'est à notre tour de jouer, renvoi le numéro de tour
   public myTurn$: Observable<number> = this.socket.fromEvent('yourTurn');
 
+  public nextPickedDominoes$: Observable<any[]> =
+    this.socket.fromEvent('nextPickedDominoes');
+
   constructor(private socket: Socket) {}
 
   startGame(): void {

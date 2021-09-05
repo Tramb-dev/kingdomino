@@ -16,6 +16,7 @@ module.exports = class Players {
   player = {
     pseudo: string;
     color: string;
+    index: number;
     uid: string;
     sid: string;
     readyToPlay: boolean;
@@ -47,8 +48,8 @@ module.exports = class Players {
    */
   sendPlayers() {
     return this.room.map(
-      // N'envoie pas les identifiants pour qu'ils restent en back
       (player) =>
+        // N'envoie pas les identifiants pour qu'ils restent en back
         (player = {
           pseudo: player.pseudo,
           color: player.color,
@@ -72,7 +73,8 @@ module.exports = class Players {
    * Tri aléatoirement les joueurs pour le premier tour
    */
   sortPlayers() {
-    let players = [];
+    // TODO: décommenter
+    /* let players = [];
     if (this.room.length > 2) {
       players = Array.from({ length: this.room.length }, (v, k) => k);
     } else {
@@ -81,8 +83,9 @@ module.exports = class Players {
     for (let i = players.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [players[i], players[j]] = [players[j], players[i]];
-    }
-    this.playerOrder = players;
+    } 
+    this.playerOrder = players;*/
+    this.playerOrder = [1, 0, 1, 0];
   }
 
   /**
@@ -91,6 +94,7 @@ module.exports = class Players {
   nextPlayer() {
     const index = this.playerOrder.shift();
     this.currentPlayer = this.room[index];
+    this.currentPlayer.index = index;
     return this.currentPlayer;
   }
 };

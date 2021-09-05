@@ -2,8 +2,10 @@ module.exports = class Dominoes {
   #allDominoes = require("./dominoes.json");
   currentDominoes = [];
   nextDominoes = [];
-  //pickedDominoes = [];
-  #numberOfDisplayedDominoes = 4;
+  pickedDominoes = [];
+  nextPickedDominoes = [];
+  numberOfDisplayedDominoes = 4;
+  king = 0;
 
   constructor() {}
 
@@ -24,7 +26,7 @@ module.exports = class Dominoes {
     this.remainingDominoes = Array.from({ length: 48 }, (v, k) => k + 1);
 
     if (numberOfPlayers === 3) {
-      this.#numberOfDisplayedDominoes = 3;
+      this.numberOfDisplayedDominoes = 3;
     }
 
     this.shuffleDominoes();
@@ -49,9 +51,15 @@ module.exports = class Dominoes {
 
     this.nextDominoes = this.remainingDominoes.splice(
       0,
-      this.#numberOfDisplayedDominoes
+      this.numberOfDisplayedDominoes
     );
     this.nextDominoes.sort((a, b) => a - b);
+    this.nextPickedDominoes = Array.from(
+      {
+        length: this.numberOfDisplayedDominoes,
+      },
+      (v, k) => false
+    );
   }
 
   /**
@@ -66,4 +74,54 @@ module.exports = class Dominoes {
       ];
     }
   }
+
+  findDomino(number) {
+    if (
+      this.nextDominoes.find((x) => x === number) &&
+      !this.pickedDominoes.find((x) => x.numero === number)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Ajoute le domino dans le tableau des domino choisit, vient le retirer de ceux restants et place le joueur pour le prochain tour
+   * @param {*} number le numéro du domino choisit
+   */
+  playerHasPickedDomino(number, player) {
+    this.pickedDominoes.push({
+      numero: number,
+      pseudo: player.pseudo,
+      orientation: 0,
+      playerIndex: player.index,
+      position: {
+        row: 0,
+        col: 0,
+      },
+    });
+
+    this.remainingDominoes.splice(number - 1, 1);
+
+    const index = this.nextDominoes.findIndex((element) => element === number);
+    this.nextPickedDominoes[index] = {
+      player: player.index,
+      king: this.king,
+    };
+    this.king++;
+  }
+
+  /**
+   * Renvoi les dominos du tour suivant séléctionnés et le joueur l'ayant sélectionné
+   */
+  /* sendCurrentPickedDominoes() {
+    return this.pickedDominoes.map((element) => {
+      if (this.nextDominoes.includes(element.numero)) {
+        return {
+          numero: element.numero,
+          index: element.index,
+        };
+      }
+    });
+  } */
 };
