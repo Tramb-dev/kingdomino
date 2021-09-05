@@ -1,14 +1,35 @@
-<div class="currentDominoes">
-    <div 
-        *ngFor="let currentDomino of dominoService.currentDominoes"
-        class="domino" 
-        [ngStyle]="{'background-position': currentDomino.position.left + 'px ' + currentDomino.position.top + 'px'}"
-    >
-        <div>
-            <img class="arrow rotate-left" src="assets/images/rotate.svg" (click)="rotate(1)">
+<div class="container">
+    <div class="currentDominoes">
+        <div
+            *ngFor="let currentDomino of dominoService.currentDominoes"
+            class="domino"
+            [id]="currentDomino.numero"
+            [ngStyle]="{'background-position': currentDomino.position.left + 'px ' + currentDomino.position.top + 'px'}"
+            >
+            <div>
+                <img class="arrow rotate-left" src="assets/images/rotate.svg" (click)="rotate(1)">
+            </div>
+            <div>
+                <img class="arrow rotate-right" src="assets/images/rotate.svg" (click)="rotate(-1)">
+            </div>
         </div>
-        <div>
-            <img class="arrow rotate-right" src="assets/images/rotate.svg" (click)="rotate(-1)">
+    </div>
+    <div class="nextDominoes">
+        <div
+        *ngFor="let nextDomino of dominoService.nextDominoes"
+        class="domino"
+        [id]="nextDomino.numero"
+        [ngStyle]="{'background-position': nextDomino.position.left + 'px ' + nextDomino.position.top + 'px'}"
+        (click)="chooseNextDomino(nextDomino.numero)"
+        >
+        </div>
+    </div>
+    <div class="kings">
+        <div 
+            *ngFor="let player of playerInfo.playersOrder; let i = index" 
+            class="king {{ player.color }}-king"
+            [ngStyle]="{'left': kingsPosition[i].left, 'top': kingsPosition[i].top}"
+        >
         </div>
     </div>
 </div>

@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { WebsocketService } from './websocket.service';
 
 import { Player } from 'src/app/interfaces/player';
-import { Castles } from '../interfaces/castles';
+import { Castles } from 'src/app/interfaces/castles';
+import { Messages } from '../interfaces/messages';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlayerInfoService {
   public player: Player = {
@@ -17,49 +19,73 @@ export class PlayerInfoService {
     score: 0,
     canAccessToLobby: true, // TODO: changer la valeur à false
     canAccessToGame: false,
-    readyToPlay: false
+    readyToPlay: false,
   };
   public players: Player[] = [];
-  private myPlayerSubscription: Subscription;
-  private allPlayersSubscription: Subscription;
+  public myPlayerSubscription: Subscription;
+  public allPlayersSubscription: Subscription;
+  public playersOrderSubcription: Subscription;
+  public playerMessageSubscription: Subscription;
+  public playersOrder: Player[] = [];
+  public myTurn: boolean = false;
   public castles: Castles = {
     pink: false,
     green: false,
     yellow: false,
-    blue: false
+    blue: false,
   };
 
-  constructor(
-    private socket: Socket, 
-    private websocket: WebsocketService
-  ) {
-      // TODO: Pour test uniquement
+  constructor(private socket: Socket, private websocket: WebsocketService) {
+    // TODO: Pour test uniquement
     this.players = [
       {
-        pseudo: "Tramb",
-        color: "blue",
-        uid: "1",
+        pseudo: 'Tramb',
+        color: 'blue',
+        uid: '1',
         readyToPlay: true,
       },
-    ]
+    ];
 
-    this.myPlayerSubscription = this.websocket.player$.subscribe(
-      value => {
-        this.player = value;
-      }
-    );
+    this.myPlayerSubscription = this.websocket.player$.subscribe((value) => {
+      this.player = value;
+    });
+
     this.allPlayersSubscription = this.websocket.playersFromServer$.subscribe(
-      value => {
+      (value) => {
         this.players = value;
         // On remet tous les châteaux à false avant de leur donner la vraie valeur
-        for(let castle in this.castles) {
+        for (let castle in this.castles) {
           this.castles[castle] = false;
         }
-        value.forEach(player => {
-          if(player.color) {
+        value.forEach((player) => {
+          if (player.color) {
             this.castles[player.color] = player.pseudo;
           }
+        });
+      }
+    );
+
+    this.playersOrderSubcription = this.websocket.playersOrder$
+      .pipe(
+        map((x: number[]) => {
+          const switchNumberToPlayer: Player[] = [];
+          x.forEach((element) => {
+            switchNumberToPlayer.push(this.players[element]);
+          });
+          return switchNumberToPlayer;
         })
+      )
+      .subscribe((value) => {
+        this.playersOrder = value;
+      });
+
+    this.playerMessageSubscription = this.websocket.messages$.subscribe(
+      (value: Messages) => {
+        if (value.type === 'yourTurn') {
+          this.myTurn = true;
+        } else {
+          this.myTurn = false;
+        }
       }
     );
   }
@@ -79,7 +105,7 @@ export class PlayerInfoService {
   chosenColor(color: string): void {
     this.socket.emit('chosenColor', {
       uid: this.player.uid,
-      color: color
+      color: color,
     });
   }
 
@@ -89,4 +115,6 @@ export class PlayerInfoService {
   playerIsReady(): void {
     this.socket.emit('playerIsReady', this.player.uid);
   }
+
+  sendChosenDomino(numero: number) {}
 }

@@ -75,41 +75,52 @@ module.exports = (io) => {
           playersModule.room.every((player) => player.readyToPlay === true) &&
           playersModule.room.length > 1
         ) {
-          game.gameLaunched = true;
-          // Les joueurs sont trié aléatoirement puis le premier joueur est tiré
-          playersModule.sortPlayers();
-          playersModule.nextPlayer();
+          game.init();
           io.to(rooms[0]).emit("startGame");
         }
       }
     });
 
     socket.on("startGame", () => {
+      console.log("startGame", game.gameLaunched);
       if (
-        game.gameLaunched &&
-        socket.id === playersModule.room[playersModule.currentPlayerNumber].sid
+        // TODO: pour debogage
+        game.gameLaunched //&&
+        //socket.id === playersModule.currentPlayer.sid
       ) {
-        io.to(rooms[0]).emit(
-          "currentDominoes",
-          game.initDominoes(playersModule.room.length)
-        );
+        io.to(rooms[0]).emit("nextDominoes", game.nextDominoes);
+
+        io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
+
+        playersModule.nextPlayer();
+
         socket.to(rooms[0]).emit("message", {
           type: "isTurnOf",
-          data: playersModule.room[playersModule.currentPlayerNumber].pseudo,
+          data: playersModule.currentPlayer.pseudo,
         });
+
         socket.emit("message", {
           type: "yourTurn",
-          data: playersModule.room[playersModule.currentPlayerNumber].pseudo,
+          data: playersModule.currentPlayer.pseudo,
         });
-        socket.emit("yourTurn", (data) => {
+
+        /* socket.emit("chooseDomino", (data) => {
           console.log(data);
-        });
+        }); */
       }
     });
 
+    // Réception d'un choix de domino
+    socket.on("chooseDomino", (data) => {
+      if (socket.id === playersModule.currentPlayer.sid) {
+      }
+    });
+
+    // Réception d'un positionnement de domino
+
     socket.on("disconnect", () => {
       console.log(chalk.yellow.italic("connection perdue"));
-      game.gameLaunched = false;
+      game.destroy();
 
       const playerToDelete = playersModule.room.find((element) => {
         return element.sid === socket.id;

@@ -1,3 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+
+  .currentDominoes,
+  .nextDominoes {
+    width: 200px;
+    margin: 10px;
+  }
+}
+
 .domino {
   width: 200px;
   height: 100px;
@@ -8,6 +21,11 @@
   margin: 6px auto;
   box-shadow: 4px 4px 7px 5px rgba(70, 70, 70, 0.4);
   position: relative;
+
+  &:hover {
+    box-shadow: 4px 4px 7px 5px rgba(0, 0, 0, 0.5);
+    transform: scale(1.08);
+  }
 
   .arrow.rotate-left {
     transform: scaleX(-1);
@@ -29,4 +47,29 @@
     cursor: pointer;
     margin: auto;
   }
+}
+
+.kings {
+  position: absolute;
+}
+
+.king {
+  background-image: url("../../../assets/images/kings.webp");
+  width: 57px;
+  height: 70px;
+  position: absolute;
+  z-index: 100;
+  filter: drop-shadow(4px 4px 4px black);
+}
+
+.pink-king {
+  background-position: 33.3%;
+}
+
+.yellow-king {
+  background-position: 66.6%;
+}
+
+.blue-king {
+  background-position-x: 100%;
 }

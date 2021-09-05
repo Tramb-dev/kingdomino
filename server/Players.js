@@ -1,7 +1,7 @@
 module.exports = class Players {
   playerOrder = [];
   nextTurnPlayerOrder = [];
-  currentPlayerNumber;
+  currentPlayer;
 
   room = [
     {
@@ -12,6 +12,19 @@ module.exports = class Players {
     },
   ];
 
+  /*
+  player = {
+    pseudo: string;
+    color: string;
+    uid: string;
+    sid: string;
+    readyToPlay: boolean;
+    canAccessToLobby: boolean;
+    canAccessToGame: boolean;
+    score: number;
+  }
+
+  */
   constructor() {}
   /**
    * Modifie le pseudo s'il est déjà pris en ajoutant des chiffres aléatoirement
@@ -59,8 +72,13 @@ module.exports = class Players {
    * Tri aléatoirement les joueurs pour le premier tour
    */
   sortPlayers() {
-    const players = Array.from({ length: this.room.length }, (v, k) => k);
-    for (let i = this.room.length - 1; i > 0; i--) {
+    let players = [];
+    if (this.room.length > 2) {
+      players = Array.from({ length: this.room.length }, (v, k) => k);
+    } else {
+      players = Array.from({ length: 4 }, (v, k) => k % 2);
+    }
+    for (let i = players.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [players[i], players[j]] = [players[j], players[i]];
     }
@@ -71,7 +89,8 @@ module.exports = class Players {
    * Renvoi le prochain joueur à jouer
    */
   nextPlayer() {
-    this.currentPlayerNumber = this.playerOrder.pop();
-    return this.currentPlayerNumber;
+    const index = this.playerOrder.shift();
+    this.currentPlayer = this.room[index];
+    return this.currentPlayer;
   }
 };

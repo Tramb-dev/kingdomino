@@ -6,17 +6,16 @@ import { WebsocketService } from './websocket.service';
 import { Messages } from '../interfaces/messages';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LogsService {
-  
-  private messagesSubscription: Subscription;
+  public messagesSubscription: Subscription;
   public messageToDisplay: string = '';
 
   constructor(private websocket: WebsocketService) {
     this.messagesSubscription = this.websocket.messages$.subscribe(
       (value: Messages) => {
-        switch(value.type) {
+        switch (value.type) {
           case 'isTurnOf':
             this.messageToDisplay = `C'est au tour de ${value.data}`;
             break;

@@ -834,14 +834,14 @@ export class DominoesService {
 
   // Les dominos sur lesquels on peut jouer
   public currentDominoes: Domino[] = [];
-  private currentDominoesSubscription: Subscription;
+  //private currentDominoesSubscription: Subscription;
 
   // Les prochains dominos à choisir
-  public nextDominoes: number[] = [];
+  public nextDominoes: Domino[] = [];
   private nextDominoesSubscription: Subscription;
 
   constructor(private websocket: WebsocketService, private http: HttpClient) {
-    this.currentDominoesSubscription = this.websocket.currentDominoes$
+    /* this.currentDominoesSubscription = this.websocket.currentDominoes$
       .pipe(
         map((x: number[]) => {
           const completeCurrentDominoes: Domino[] = [];
@@ -854,14 +854,23 @@ export class DominoesService {
       )
       .subscribe((value) => {
         this.currentDominoes = value;
-      });
+      }); */
 
-    this.nextDominoesSubscription = this.websocket.nextDominoes$.subscribe(
-      (value) => {
+    this.nextDominoesSubscription = this.websocket.nextDominoes$
+      .pipe(
+        map((x: number[]) => {
+          this.currentDominoes = this.nextDominoes;
+          const completeNextDominoes: Domino[] = [];
+          for (let i = 0; i < x.length; i++) {
+            const index = x[i] - 1;
+            completeNextDominoes.push(this.allDominoes[index]);
+          }
+          return completeNextDominoes;
+        })
+      )
+      .subscribe((value) => {
         this.nextDominoes = value;
-        console.log('nextDominoes', this.nextDominoes);
-      }
-    );
+      });
   }
 
   createGrille(): void {
