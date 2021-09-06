@@ -3,66 +3,66 @@
     "numero": 1,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
     "numero": 2,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
     "numero": 3,
     "left": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
     "numero": 4,
     "left": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
     "numero": 5,
     "left": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
     "numero": 6,
     "left": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
@@ -135,18 +135,18 @@
     "numero": 13,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
     "numero": 14,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
@@ -157,7 +157,7 @@
     "numero": 15,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
@@ -168,7 +168,7 @@
     "numero": 16,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
@@ -179,7 +179,7 @@
     "numero": 17,
     "left": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
@@ -190,7 +190,7 @@
     "numero": 18,
     "left": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
@@ -201,18 +201,18 @@
     "numero": 19,
     "left": {
       "couronnes": 1,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
     "numero": 20,
     "left": {
       "couronnes": 1,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
@@ -223,7 +223,7 @@
     "numero": 21,
     "left": {
       "couronnes": 1,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
@@ -234,7 +234,7 @@
     "numero": 22,
     "left": {
       "couronnes": 1,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
@@ -245,7 +245,7 @@
     "numero": 23,
     "left": {
       "couronnes": 1,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 0,
@@ -256,51 +256,51 @@
     "numero": 24,
     "left": {
       "couronnes": 1,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
     "numero": 25,
     "left": {
       "couronnes": 1,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
     "numero": 26,
     "left": {
       "couronnes": 1,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
     "numero": 27,
     "left": {
       "couronnes": 1,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
     "numero": 28,
     "left": {
       "couronnes": 1,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
@@ -311,7 +311,7 @@
     "numero": 29,
     "left": {
       "couronnes": 1,
-      "contenu": "forêt"
+      "contenu": "foret"
     },
     "right": {
       "couronnes": 0,
@@ -326,7 +326,7 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
@@ -337,7 +337,7 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
@@ -348,7 +348,7 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
@@ -359,7 +359,7 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
@@ -370,7 +370,7 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
@@ -381,14 +381,14 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "forêt"
+      "contenu": "foret"
     }
   },
   {
     "numero": 36,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 1,
@@ -410,7 +410,7 @@
     "numero": 38,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 1,
@@ -436,14 +436,14 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
     "numero": 41,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 2,
@@ -465,7 +465,7 @@
     "numero": 43,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 2,
@@ -491,7 +491,7 @@
     },
     "right": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     }
   },
   {
@@ -520,7 +520,7 @@
     "numero": 48,
     "left": {
       "couronnes": 0,
-      "contenu": "blé"
+      "contenu": "ble"
     },
     "right": {
       "couronnes": 3,

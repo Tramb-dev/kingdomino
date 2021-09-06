@@ -102,6 +102,11 @@ module.exports = class Players {
     return this.currentPlayer;
   }
 
+  /**
+   * Garde en mémoire la position des joueurs via leurs pions pour le prochain tour, uen fois qu'ils ont tous sélectionné leurs dominos
+   * @param {*} pickedDominoes
+   * @returns
+   */
   placePlayersForNextTurn(pickedDominoes) {
     for (let i = 0; i < pickedDominoes.length; i++) {
       this.nextTurnPlayerOrder[i] = pickedDominoes[i].player;

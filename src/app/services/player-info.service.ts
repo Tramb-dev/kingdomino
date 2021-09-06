@@ -9,6 +9,8 @@ import { Player } from 'src/app/interfaces/player';
 import { Castles } from 'src/app/interfaces/castles';
 import { Messages } from '../interfaces/messages';
 import { King } from '../interfaces/king';
+import { GridPosition } from '../interfaces/interfaces';
+import { Domino } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -31,9 +33,10 @@ export class PlayerInfoService {
   public playersOrderSubcription: Subscription;
   public playerMessageSubscription: Subscription;
   public nextPickedDominoesSubscription: Subscription;
-  public chooseDominoSubscription: Subscription;
+  public moveDominoSubscription: Subscription;
   public playersOrder: Player[] = [];
   public kingsPosition: King[] = [];
+  public currentDominoesSubscription: Subscription;
   public castles: Castles = {
     pink: false,
     green: false,
@@ -99,13 +102,23 @@ export class PlayerInfoService {
 
     this.playerMessageSubscription = this.websocket.messages$.subscribe(
       (value: Messages) => {
-        if (value.type === 'yourTurn') {
-          this.player.isTurn = true;
-          this.player.canPlaceKing = true;
-        } else {
-          this.player.isTurn = false;
-          this.player.canPlaceKing = false;
-          this.player.canPlaceDomino = false;
+        switch (value.type) {
+          case 'placedDomino':
+            if (value.data === 'ok') {
+              this.player.canPlaceDomino = false;
+            }
+            break;
+
+          case 'yourTurn':
+            this.player.isTurn = true;
+            this.player.canPlaceKing = true;
+            break;
+
+          case 'turnOf':
+            this.player.isTurn = false;
+            this.player.canPlaceKing = false;
+            this.player.canPlaceDomino = false;
+            break;
         }
       }
     );
@@ -123,13 +136,27 @@ export class PlayerInfoService {
         }
       });
 
-    this.chooseDominoSubscription = this.websocket.chooseDomino$.subscribe(
+    this.moveDominoSubscription = this.websocket.moveDomino$.subscribe(
       (uid: string) => {
         if (uid === this.player.uid) {
           this.player.canPlaceDomino = true;
         }
       }
     );
+
+    this.currentDominoesSubscription =
+      this.websocket.currentDominoes$.subscribe((value: number[]) => {
+        const diffBetweenKingsAndLastDominoes =
+          this.kingsPosition.length - value.length;
+        for (
+          let i = this.kingsPosition.length;
+          i > diffBetweenKingsAndLastDominoes;
+          i--
+        ) {
+          this.kingsPosition[i - 1].top =
+            (i - 1 - diffBetweenKingsAndLastDominoes) * (100 + 6) + 30 + 'px';
+        }
+      });
   }
 
   /**
@@ -162,8 +189,21 @@ export class PlayerInfoService {
    * Envoi au serveur le domino choisit
    * @param numero le numéro du domino choisit
    */
-  sendChosenDomino(numero: number) {
+  sendChosenDomino(numero: number): void {
     this.socket.emit('chosenDomino', numero);
     this.player.canPlaceKing = false;
+  }
+
+  sendPlacedDomino(gridPosition: GridPosition, placedDomino: Domino): void {
+    this.socket.emit('placedDomino', {
+      numero: placedDomino.numero,
+      orientation: placedDomino.orientation,
+      left: placedDomino.left,
+      right: placedDomino.right,
+      gridPosition: {
+        row: gridPosition.row,
+        col: gridPosition.col,
+      },
+    });
   }
 }

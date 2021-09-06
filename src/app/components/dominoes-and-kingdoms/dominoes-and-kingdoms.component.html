@@ -7,7 +7,7 @@
             [ngStyle]="{
                 'background-position': currentDomino.position.left + 'px ' + currentDomino.position.top + 'px',
                 'top': i * 110 + 'px',
-                'z-index': (i === 0)? 150 : 50
+                'z-index': (i === 0 && playerInfo.player.canPlaceDomino)? 150 : 50
             }"
             [style.transform]="'rotate(' + currentDomino.rotate + 'deg)'"
             >

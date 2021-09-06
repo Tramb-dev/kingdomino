@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PlayerInfoService } from 'src/app/services/player-info.service';
 import { DominoesService } from 'src/app/services/dominoes.service';
 
+import { GridPosition } from 'src/app/interfaces/interfaces';
+
 @Component({
   selector: 'app-player-grid',
   templateUrl: './player-grid.component.html',
@@ -9,9 +11,11 @@ import { DominoesService } from 'src/app/services/dominoes.service';
 })
 export class PlayerGridComponent implements OnInit {
   playerColor: string = 'castle-yellow';
-  gridPosition = {
+  gridPosition: GridPosition = {
     left: 0,
     top: 0,
+    col: 0,
+    row: 0,
   };
   displayDomino: boolean = false;
 
@@ -73,11 +77,15 @@ export class PlayerGridComponent implements OnInit {
           this.gridPosition = {
             left: colonne * 100,
             top: ligne * 100,
+            col: colonne,
+            row: ligne,
           };
         } else if (test.left) {
           this.gridPosition = {
             left: (colonne - 1) * 100,
             top: ligne * 100,
+            col: colonne - 1,
+            row: ligne,
           };
         }
       } else if (
@@ -88,14 +96,25 @@ export class PlayerGridComponent implements OnInit {
           this.gridPosition = {
             left: colonne * 100 - 50,
             top: ligne * 100 + 50,
+            col: colonne,
+            row: ligne,
           };
         } else if (test.top) {
           this.gridPosition = {
             left: colonne * 100 - 50,
             top: (ligne - 1) * 100 + 50,
+            col: colonne,
+            row: ligne - 1,
           };
         }
       }
     }
+  }
+
+  placeDomino(): void {
+    this.playerInfo.sendPlacedDomino(
+      this.gridPosition,
+      this.dominoService.currentDominoes[0]
+    );
   }
 }

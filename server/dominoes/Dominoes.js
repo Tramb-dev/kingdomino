@@ -76,11 +76,28 @@ module.exports = class Dominoes {
     }
   }
 
-  findDomino(number) {
+  /**
+   * Cherche si le domino choisit pour poser le pion se trouve bien dans les prochains dominos à jouer et qu'il n'a pas déjà été sélectionné
+   * @param {*} number le numéro du domino
+   * @returns si vrai, le domino demandé est au bon endroit, faux sinon
+   */
+  findDominoToPick(number) {
     if (
       this.nextDominoes.find((x) => x === number) &&
       !this.pickedDominoes.find((x) => x.numero === number)
     ) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Cherche si le domino placé sur la grille de jeu se trouve bien dans la liste de dominos à jouer
+   * @param {*} number le numéro du domino
+   * @returns si vrai, le domino demandé est au bon endroit, faux sinon
+   */
+  findDominoToPlace(number) {
+    if (this.currentDominoes.find((x) => x === number)) {
       return true;
     }
     return false;
@@ -96,10 +113,12 @@ module.exports = class Dominoes {
       pseudo: player.pseudo,
       orientation: 0,
       playerIndex: player.index,
-      position: {
+      uid: player.uid,
+      gridPosition: {
         row: 0,
         col: 0,
       },
+      placed: false,
     });
 
     this.remainingDominoes.splice(number - 1, 1);
@@ -112,7 +131,26 @@ module.exports = class Dominoes {
     this.king++;
   }
 
-  playerHasPlacedDomino() {
+  playerHasPlacedDomino(data) {
     this.domino++;
+    const indexOfPlacedDomino = this.pickedDominoes.findIndex(
+      (element) => element.numero === data.numero
+    );
+    this.pickedDominoes[indexOfPlacedDomino].orientation = data.orientation;
+    this.pickedDominoes[indexOfPlacedDomino].gridPosition = data.gridPosition;
+    this.pickedDominoes[indexOfPlacedDomino].placed = true;
+    this.currentDominoes.shift();
+  }
+
+  sendPlayerDominoesList(uid) {
+    return this.pickedDominoes
+      .filter((element) => element.uid === uid && element.placed)
+      .map((domino) => {
+        return {
+          numero: domino.numero,
+          orientation: domino.orientation,
+          gridPosition: domino.gridPosition,
+        };
+      });
   }
 };

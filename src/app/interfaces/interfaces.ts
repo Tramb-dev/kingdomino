@@ -4,10 +4,8 @@ export interface Case {
     colonne: number;
   };
   isDroppable: boolean;
-  contenu: string | null; // chateau, ble, marais, pre, mine, foret, eau, null
+  contenu: string | null; // chateau, ble, marais, prairie, mine, foret, eau, null
   nbCouronnes: number; // [0-3]
-  hover: boolean;
-  exists: boolean;
 }
 
 export interface CaseDomino {
@@ -25,4 +23,25 @@ export interface Domino {
     left: number;
     top: number;
   };
+}
+
+export interface PlacedDomino {
+  numero: number;
+  orientation: number;
+  rotate: number;
+  position: {
+    left: number;
+    top: number;
+  };
+  gridPosition: {
+    left: number;
+    top: number;
+  };
+}
+
+export interface GridPosition {
+  left: number;
+  top: number;
+  col: number;
+  row: number;
 }

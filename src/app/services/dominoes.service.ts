@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { WebsocketService } from './websocket.service';
 
-import { Domino, Case } from '../interfaces/interfaces';
+import { Domino, Case, PlacedDomino } from '../interfaces/interfaces';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -11,7 +11,8 @@ import { map, tap } from 'rxjs/operators';
 })
 export class DominoesService {
   grille: Case[][] = [];
-  selectedDomino: number = 1;
+  // TODO: Pour test
+  public myPlacedDominoes: PlacedDomino[] = [];
   private allDominoes: Domino[] = [
     {
       numero: 1,
@@ -23,11 +24,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -40,11 +41,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -57,11 +58,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -74,11 +75,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -91,11 +92,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -108,11 +109,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -227,11 +228,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -244,7 +245,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
@@ -261,7 +262,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
@@ -278,7 +279,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
@@ -295,7 +296,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
@@ -312,7 +313,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
@@ -329,11 +330,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -346,7 +347,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
@@ -363,7 +364,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
@@ -380,7 +381,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
@@ -397,7 +398,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 0,
@@ -414,11 +415,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -431,11 +432,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -448,11 +449,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -465,11 +466,11 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -482,7 +483,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
@@ -499,7 +500,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
@@ -520,7 +521,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -537,7 +538,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -554,7 +555,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -571,7 +572,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -588,7 +589,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -605,7 +606,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
     },
     {
@@ -618,7 +619,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 1,
@@ -652,7 +653,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 1,
@@ -690,7 +691,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -703,7 +704,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 2,
@@ -737,7 +738,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 2,
@@ -775,7 +776,7 @@ export class DominoesService {
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
     {
@@ -822,7 +823,7 @@ export class DominoesService {
       },
       left: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
       right: {
         couronnes: 3,
@@ -844,34 +845,77 @@ export class DominoesService {
       },
       left: {
         couronnes: 1,
-        contenu: 'forêt',
+        contenu: 'foret',
       },
       right: {
         couronnes: 0,
-        contenu: 'blé',
+        contenu: 'ble',
       },
     },
   ];
+  public currentDominoesSubscription: Subscription;
 
   // Les prochains dominos à choisir
   public nextDominoes: Domino[] = [];
   public nextDominoesSubscription: Subscription;
 
+  public myGridSubscription: Subscription;
+
   constructor(private websocket: WebsocketService) {
+    this.currentDominoesSubscription = this.websocket.currentDominoes$
+      .pipe(map((x: number[]) => this.completeDominoes(x)))
+      .subscribe((value) => {
+        this.currentDominoes = value;
+      });
+
     this.nextDominoesSubscription = this.websocket.nextDominoes$
       .pipe(
         map((x: number[]) => {
           this.currentDominoes = this.nextDominoes;
-          const completeNextDominoes: Domino[] = [];
-          for (let i = 0; i < x.length; i++) {
-            const index = x[i] - 1;
-            completeNextDominoes.push(this.allDominoes[index]);
-          }
-          return completeNextDominoes;
+          return this.completeDominoes(x);
         })
       )
       .subscribe((value) => {
         this.nextDominoes = value;
+      });
+
+    this.myGridSubscription = this.websocket.myGrid$
+      .pipe(
+        map((value: any[]) => {
+          return value.map((element) => {
+            const domino = this.allDominoes.find(
+              (x) => x.numero === element.numero
+            );
+
+            return {
+              numero: element.numero,
+              orientation: element.orientation,
+              rotate: element.orientation * 90,
+              position: domino
+                ? domino.position
+                : {
+                    left: 0,
+                    top: 0,
+                  },
+              gridPosition: {
+                row: element.gridPosition.row,
+                col: element.gridPosition.col,
+                left:
+                  element.orientation % 2 === 0
+                    ? element.gridPosition.col * 100
+                    : element.gridPosition.col * 100 - 50,
+                top:
+                  element.orientation % 2 === 0
+                    ? element.gridPosition.row * 100
+                    : element.gridPosition.row * 100 + 50,
+              },
+            };
+          });
+        })
+      )
+      .subscribe((value: PlacedDomino[]) => {
+        this.myPlacedDominoes = value;
+        console.log(this.myPlacedDominoes);
       });
   }
 
@@ -888,8 +932,6 @@ export class DominoesService {
             isDroppable: false,
             contenu: null,
             nbCouronnes: 0,
-            hover: false,
-            exists: true,
           };
           if (ligne === 2 && colonne === 2) {
             // La case au milieu de la grille est un chateau
@@ -913,5 +955,14 @@ export class DominoesService {
         this.grille.push(ligneDeGrille);
       }
     }
+  }
+
+  completeDominoes(arrayOfDominoesNumbers: number[]) {
+    const completeDominoes: Domino[] = [];
+    for (let i = 0; i < arrayOfDominoesNumbers.length; i++) {
+      const index = arrayOfDominoesNumbers[i] - 1;
+      completeDominoes.push(this.allDominoes[index]);
+    }
+    return completeDominoes;
   }
 }

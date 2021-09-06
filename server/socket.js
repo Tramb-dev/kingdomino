@@ -2,6 +2,7 @@ const db = require("./db");
 const uuid = require("uuid");
 const Game = require("./Game");
 const Players = require("./Players");
+const Grid = require("./Grid");
 
 const chalk = require("chalk");
 
@@ -44,6 +45,8 @@ module.exports = (io) => {
           canAccessToGame: false,
           score: 0,
           canPlaceKing: false,
+          canPlaceDomino: false,
+          grid: new Grid(),
         };
 
         playersModule.room.push(newPlayer);
@@ -112,7 +115,7 @@ module.exports = (io) => {
     socket.on("chosenDomino", (numero) => {
       if (
         socket.id === playersModule.currentPlayer.sid &&
-        game.findDomino(numero) &&
+        game.findDominoToPick(numero) &&
         playersModule.currentPlayer.canPlaceKing
       ) {
         game.playerHasPickedDomino(numero, playersModule.currentPlayer);
@@ -138,14 +141,67 @@ module.exports = (io) => {
           });
         } else {
           io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
-          socket.emit("chooseDomino", playersModule.currentPlayer.uid);
+          socket.emit("moveDomino", playersModule.currentPlayer.uid);
+
           playersModule.currentPlayer.canPlaceKing = false;
+          playersModule.currentPlayer.canPlaceDomino = true;
         }
       }
     });
 
     // Réception d'un positionnement de domino
-    //socket.on("placedDomino");
+    socket.on("placedDomino", (data) => {
+      if (
+        socket.id === playersModule.currentPlayer.sid &&
+        game.findDominoToPlace(data.numero) &&
+        playersModule.currentPlayer.canPlaceDomino
+      ) {
+        const grid = playersModule.currentPlayer.grid.placeDominoOnGrid(data);
+        if (grid) {
+          // Si le joueur peut effectivement placer son domino
+          game.playerHasPlacedDomino(data);
+          if (game.currentDominoes.length > 0) {
+            io.to(rooms[0]).emit("currentDominoes", game.currentDominoes);
+          }
+          socket.emit("message", {
+            type: "placedDomino",
+            data: "ok",
+          });
+          const playerGrid = game.sendPlayerDominoesList(
+            playersModule.currentPlayer.uid
+          );
+          socket.emit("myGrid", playerGrid);
+          socket
+            .to(rooms[0])
+            .emit("grids", playerGrid, playersModule.currentPlayer.index);
+
+          playersModule.currentPlayer.canPlaceDomino = false;
+
+          if (game.domino === 4) {
+            // Les dominos sont tous placés, on passe au tour suivant
+            game.newTurn();
+            io.to(rooms[0]).emit("newTurn", game.turn);
+            io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
+            io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
+          }
+
+          const nextPlayer = playersModule.nextPlayer();
+          io.to(rooms[0]).emit("message", {
+            type: "turnOf",
+            data: nextPlayer.pseudo,
+          });
+          io.to(nextPlayer.sid).emit("message", {
+            type: "yourTurn",
+            data: nextPlayer.pseudo,
+          });
+        } else {
+          socket.emit("message", {
+            type: "placedDomino",
+            data: "ko",
+          });
+        }
+      }
+    });
 
     socket.on("disconnect", () => {
       console.log(chalk.yellow.italic("connection perdue"));

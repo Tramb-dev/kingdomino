@@ -3,7 +3,7 @@
       <div *ngFor="let row of dominoService.grille" class="row">
         <div *ngFor="let case of row" class="col">
           <div
-            *ngIf="case.isDroppable && case.exists"
+            *ngIf="case.isDroppable"
             class="case drop-target"
   
             (mouseover)="mouseOver($event)"
@@ -24,7 +24,19 @@
       'top': gridPosition.top + 'px',
       'left': gridPosition.left + 'px'
     }"
+    (click)="placeDomino()"
   >
-  
+  </div>
+  <div 
+    *ngFor="let domino of dominoService.myPlacedDominoes" class="domino"
+    [id]="domino.numero"
+    [style.transform]="'rotate(' + domino.rotate + 'deg)'"
+    [ngStyle]="{
+      'background-position': domino.position.left + 'px ' + domino.position.top + 'px',
+      'top': domino.gridPosition.top + 'px',
+      'left': domino.gridPosition.left + 'px'
+    }"
+  >
+
   </div>
 </div>

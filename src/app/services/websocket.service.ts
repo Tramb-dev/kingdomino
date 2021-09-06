@@ -20,8 +20,8 @@ export class WebsocketService {
     this.socket.fromOneTimeEvent('startGame');
 
   // Observable recevant les dominos sur lesquels on peut jouer
-  /* public currentDominoes$: Observable<number[]> =
-    this.socket.fromEvent('currentDominoes'); */
+  public currentDominoes$: Observable<number[]> =
+    this.socket.fromEvent('currentDominoes');
 
   // Observable recevant les prochains dominos
   public nextDominoes$: Observable<number[]> =
@@ -40,8 +40,11 @@ export class WebsocketService {
   public nextPickedDominoes$: Observable<any[]> =
     this.socket.fromEvent('nextPickedDominoes');
 
-  public chooseDomino$: Observable<string> =
-    this.socket.fromEvent('chooseDomino');
+  // Le serveur accepte le déplacement du pion et permet de placer son domino
+  public moveDomino$: Observable<string> = this.socket.fromEvent('moveDomino');
+
+  // Reçoit la grille du joueur avec les dominos dessus
+  public myGrid$: Observable<Object[]> = this.socket.fromEvent('myGrid');
 
   constructor(private socket: Socket) {}
 
