@@ -1,6 +1,11 @@
+.container {
+  position: relative;
+}
+
 .grille {
   display: flex;
   flex-direction: column;
+  border: 1px solid black;
 }
 
 .row {
@@ -38,12 +43,15 @@
   background-color: lavender;
 }
 
-.focus {
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
-}
-
 .domino {
   width: 200px;
   height: 100px;
   background-image: url("../../../assets/images/tiles.webp");
+  position: absolute;
+}
+
+.preview {
+  outline: 1px solid rgba(0, 0, 0, 0.3);
+  transition: transform 0.5s ease;
+  box-shadow: 4px 4px 7px 5px rgba(70, 70, 70, 0.4);
 }

@@ -1,25 +1,35 @@
 <div class="container">
     <div class="currentDominoes">
         <div
-            *ngFor="let currentDomino of dominoService.currentDominoes"
+            *ngFor="let currentDomino of dominoService.currentDominoes; let i = index"
             class="domino"
             [id]="currentDomino.numero"
-            [ngStyle]="{'background-position': currentDomino.position.left + 'px ' + currentDomino.position.top + 'px'}"
+            [ngStyle]="{
+                'background-position': currentDomino.position.left + 'px ' + currentDomino.position.top + 'px',
+                'top': i * 110 + 'px',
+                'z-index': (i === 0)? 150 : 50
+            }"
+            [style.transform]="'rotate(' + currentDomino.rotate + 'deg)'"
             >
-            <div>
-                <img class="arrow rotate-left" src="assets/images/rotate.svg" (click)="rotate(1)">
-            </div>
-            <div>
-                <img class="arrow rotate-right" src="assets/images/rotate.svg" (click)="rotate(-1)">
-            </div>
+            <ng-container  *ngIf="i === 0 && playerInfo.player.canPlaceDomino">
+                <div>
+                    <img class="arrow rotate-left" src="assets/images/rotate.svg" (click)="rotate(1)">
+                </div>
+                <div>
+                    <img class="arrow rotate-right" src="assets/images/rotate.svg" (click)="rotate(-1)">
+                </div>
+            </ng-container>
         </div>
     </div>
     <div class="nextDominoes">
         <div
-        *ngFor="let nextDomino of dominoService.nextDominoes"
+        *ngFor="let nextDomino of dominoService.nextDominoes; let i = index"
         class="domino"
         [id]="nextDomino.numero"
-        [ngStyle]="{'background-position': nextDomino.position.left + 'px ' + nextDomino.position.top + 'px'}"
+        [ngStyle]="{
+            'background-position': nextDomino.position.left + 'px ' + nextDomino.position.top + 'px',
+            'top': i * 110 + 'px'
+        }"
         (click)="chooseNextDomino(nextDomino.numero)"
         >
         </div>
@@ -34,4 +44,4 @@
         </div>
     </div>
 </div>
-<div *ngIf="false" [style.transform]="'rotate(0deg)'"></div>
+<div *ngIf="false" ></div>

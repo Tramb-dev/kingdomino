@@ -17,21 +17,13 @@ export class DominoesAndKingdomsComponent implements OnInit {
   ngOnInit(): void {}
 
   chooseNextDomino(numero: number): void {
-    if (this.playerInfo.myTurn) {
+    if (this.playerInfo.player.isTurn && this.playerInfo.player.canPlaceKing) {
       this.playerInfo.sendChosenDomino(numero);
     }
   }
 
   rotate(direction: number): void {
-    /* const domino = this.dominoService.allDominoes[this.dominoService.selectedDomino];
-    if(!domino.orientation) {
-      domino.orientation = 0;
-    }
-    domino.orientation += direction;
-
-    if(!domino.rotate) {
-      domino.rotate = 0;
-    }
-    domino.rotate += direction * 90; */
+    this.dominoService.currentDominoes[0].orientation += direction;
+    this.dominoService.currentDominoes[0].rotate += direction * 90;
   }
 }

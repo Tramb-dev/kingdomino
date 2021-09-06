@@ -6,8 +6,9 @@ module.exports = class Dominoes {
   nextPickedDominoes = [];
   numberOfDisplayedDominoes = 4;
   king = 0;
+  domino = 0;
 
-  constructor() {}
+  constructor() {} /* 
 
   getAllDominoes() {
     return this.#allDominoes;
@@ -15,7 +16,7 @@ module.exports = class Dominoes {
 
   getOneDomino(number) {
     return this.#allDominoes[number];
-  }
+  } */
 
   /**
    * Initialise la pile de dominos et renvoi le premier tirage
@@ -109,5 +110,9 @@ module.exports = class Dominoes {
       king: this.king,
     };
     this.king++;
+  }
+
+  playerHasPlacedDomino() {
+    this.domino++;
   }
 };

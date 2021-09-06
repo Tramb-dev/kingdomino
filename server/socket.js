@@ -85,7 +85,6 @@ module.exports = (io) => {
     });
 
     socket.on("startGame", () => {
-      console.log("startGame", game.gameLaunched);
       if (
         // TODO: pour debogage
         game.gameLaunched //&&
@@ -118,28 +117,29 @@ module.exports = (io) => {
       ) {
         game.playerHasPickedDomino(numero, playersModule.currentPlayer);
 
-        if (game.king === game.numberOfDisplayedDominoes) {
-          game.newTurn();
-          io.to(rooms[0]).emit("newTurn", game.turn);
-          io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
-          io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
-          playersModule.nextPlayer();
+        if (game.turn === 0) {
+          if (game.king === game.numberOfDisplayedDominoes) {
+            // S'il n'y a plus de pion à placer lors du premier tour de jeu, on passe au premier tour de jeu
+            game.newTurn();
+            io.to(rooms[0]).emit("newTurn", game.turn);
+            io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
+            io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
+          } else {
+            io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
+          }
+          const nextPlayer = playersModule.nextPlayer();
+          io.to(rooms[0]).emit("message", {
+            type: "turnOf",
+            data: nextPlayer.pseudo,
+          });
+          io.to(nextPlayer.sid).emit("message", {
+            type: "yourTurn",
+            data: nextPlayer.pseudo,
+          });
         } else {
           io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
-          if (game.turn === 0) {
-            const nextPlayer = playersModule.nextPlayer();
-            io.to(rooms[0]).emit("message", {
-              type: "turnOf",
-              data: nextPlayer.pseudo,
-            });
-            io.to(nextPlayer.sid).emit("message", {
-              type: "yourTurn",
-              data: nextPlayer.pseudo,
-            });
-          } else {
-            socket.emit("chooseDomino");
-            playersModule.currentPlayer.canPlaceKing = false;
-          }
+          socket.emit("chooseDomino", playersModule.currentPlayer.uid);
+          playersModule.currentPlayer.canPlaceKing = false;
         }
       }
     });

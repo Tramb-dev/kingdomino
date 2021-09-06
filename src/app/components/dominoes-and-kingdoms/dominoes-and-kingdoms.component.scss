@@ -3,6 +3,7 @@
   flex-direction: row;
   justify-content: space-between;
   position: relative;
+  height: 480px;
 
   .currentDominoes,
   .nextDominoes {
@@ -20,7 +21,7 @@
   background-image: url("../../../assets/images/tiles.webp");
   margin: 6px auto;
   box-shadow: 4px 4px 7px 5px rgba(70, 70, 70, 0.4);
-  position: relative;
+  position: absolute;
 
   &:hover {
     box-shadow: 4px 4px 7px 5px rgba(0, 0, 0, 0.5);

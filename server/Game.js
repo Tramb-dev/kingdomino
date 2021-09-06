@@ -29,6 +29,7 @@ module.exports = class Game extends Dominoes {
 
   newTurn() {
     this.king = 0;
+    this.domino = 0;
     this.turn++;
     this.playerModule.playerOrder = this.playerModule.placePlayersForNextTurn(
       this.nextPickedDominoes
@@ -46,5 +47,6 @@ module.exports = class Game extends Dominoes {
     this.gameLaunched = false;
     this.turn = 0;
     this.king = 0;
+    this.domino = 0;
   }
 };

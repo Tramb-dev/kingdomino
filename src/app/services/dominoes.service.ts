@@ -832,7 +832,26 @@ export class DominoesService {
   ];
 
   // Les dominos sur lesquels on peut jouer
-  public currentDominoes: Domino[] = [];
+  // TODO: pour test
+  public currentDominoes: Domino[] = [
+    {
+      numero: 24,
+      orientation: 0,
+      rotate: 0,
+      position: {
+        left: -415,
+        top: -330,
+      },
+      left: {
+        couronnes: 1,
+        contenu: 'forêt',
+      },
+      right: {
+        couronnes: 0,
+        contenu: 'blé',
+      },
+    },
+  ];
 
   // Les prochains dominos à choisir
   public nextDominoes: Domino[] = [];

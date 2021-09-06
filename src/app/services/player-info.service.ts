@@ -21,6 +21,9 @@ export class PlayerInfoService {
     canAccessToLobby: true, // TODO: changer la valeur à false
     canAccessToGame: false,
     readyToPlay: false,
+    canPlaceDomino: true,
+    canPlaceKing: false,
+    isTurn: false,
   };
   public players: Player[] = [];
   public myPlayerSubscription: Subscription;
@@ -28,9 +31,9 @@ export class PlayerInfoService {
   public playersOrderSubcription: Subscription;
   public playerMessageSubscription: Subscription;
   public nextPickedDominoesSubscription: Subscription;
+  public chooseDominoSubscription: Subscription;
   public playersOrder: Player[] = [];
   public kingsPosition: King[] = [];
-  public myTurn: boolean = false;
   public castles: Castles = {
     pink: false,
     green: false,
@@ -46,6 +49,9 @@ export class PlayerInfoService {
         color: 'blue',
         uid: '1',
         readyToPlay: true,
+        canPlaceKing: false,
+        canPlaceDomino: false,
+        isTurn: false,
       },
     ];
 
@@ -94,9 +100,12 @@ export class PlayerInfoService {
     this.playerMessageSubscription = this.websocket.messages$.subscribe(
       (value: Messages) => {
         if (value.type === 'yourTurn') {
-          this.myTurn = true;
+          this.player.isTurn = true;
+          this.player.canPlaceKing = true;
         } else {
-          this.myTurn = false;
+          this.player.isTurn = false;
+          this.player.canPlaceKing = false;
+          this.player.canPlaceDomino = false;
         }
       }
     );
@@ -113,6 +122,14 @@ export class PlayerInfoService {
           }
         }
       });
+
+    this.chooseDominoSubscription = this.websocket.chooseDomino$.subscribe(
+      (uid: string) => {
+        if (uid === this.player.uid) {
+          this.player.canPlaceDomino = true;
+        }
+      }
+    );
   }
 
   /**
@@ -147,5 +164,6 @@ export class PlayerInfoService {
    */
   sendChosenDomino(numero: number) {
     this.socket.emit('chosenDomino', numero);
+    this.player.canPlaceKing = false;
   }
 }
