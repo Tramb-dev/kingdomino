@@ -44,8 +44,8 @@ module.exports = class Grid {
    * Réalise une grille définissant où les dominos peuvent se poser
    * @returns la grille de booléens
    */
-  sendDroppables() {
-    const makeACellDroppable = (row, col) => {
+  sendDroppables(domino) {
+    /* const makeACellDroppable = (row, col) => {
       if (this.testOccupiedCell(row, col) === null) {
         this.droppables[row][col] = true;
         return true;
@@ -74,6 +74,88 @@ module.exports = class Grid {
           testAdjacentCells(row + 1, col);
           testAdjacentCells(row, col - 1);
           testAdjacentCells(row, col + 1);
+        }
+      }
+    }
+    return this.droppables; */
+
+    this.droppables = Array.from({ length: 5 }, (v, k) => {
+      return (k = Array.from({ length: 5 }, (v, k) => (k = false)));
+    });
+
+    const testAdjacentCells = (row, col) => {
+      if (this.testOccupiedCell(row, col) === null) {
+        return true;
+      }
+      return false;
+    };
+
+    const leftContent = domino.left.contenu;
+    const rightContent = domino.right.contenu;
+
+    for (let row = 0; row < 5; row++) {
+      for (let col = 0; col < 5; col++) {
+        if (
+          this.grid[row][col].contenu === "chateau" ||
+          this.grid[row][col].contenu === leftContent ||
+          this.grid[row][col].contenu === rightContent
+        ) {
+          if (testAdjacentCells(row - 1, col)) {
+            if (testAdjacentCells(row - 2, col)) {
+              this.droppables[row - 2][col] = true;
+              this.droppables[row - 1][col] = true;
+            }
+            if (testAdjacentCells(row - 1, col - 1)) {
+              this.droppables[row - 1][col - 1] = true;
+              this.droppables[row - 1][col] = true;
+            }
+            if (testAdjacentCells(row - 1, col + 1)) {
+              this.droppables[row - 1][col + 1] = true;
+              this.droppables[row - 1][col] = true;
+            }
+          }
+          if (testAdjacentCells(row + 1, col)) {
+            if (testAdjacentCells(row + 2, col)) {
+              this.droppables[row + 2][col] = true;
+              this.droppables[row + 1][col] = true;
+            }
+            if (testAdjacentCells(row + 1, col - 1)) {
+              this.droppables[row + 1][col - 1] = true;
+              this.droppables[row + 1][col] = true;
+            }
+            if (testAdjacentCells(row + 1, col + 1)) {
+              this.droppables[row + 1][col + 1] = true;
+              this.droppables[row + 1][col] = true;
+            }
+          }
+          if (testAdjacentCells(row, col - 1)) {
+            if (testAdjacentCells(row, col - 2)) {
+              this.droppables[row][col - 2] = true;
+              this.droppables[row][col - 1] = true;
+            }
+            if (testAdjacentCells(row - 1, col - 1)) {
+              this.droppables[row - 1][col - 1] = true;
+              this.droppables[row][col - 1] = true;
+            }
+            if (testAdjacentCells(row + 1, col - 1)) {
+              this.droppables[row + 1][col - 1] = true;
+              this.droppables[row][col - 1] = true;
+            }
+          }
+          if (testAdjacentCells(row, col + 1)) {
+            if (testAdjacentCells(row, col + 2)) {
+              this.droppables[row][col + 2] = true;
+              this.droppables[row][col + 1] = true;
+            }
+            if (testAdjacentCells(row - 1, col + 1)) {
+              this.droppables[row - 1][col + 1] = true;
+              this.droppables[row][col + 1] = true;
+            }
+            if (testAdjacentCells(row + 1, col + 1)) {
+              this.droppables[row + 1][col + 1] = true;
+              this.droppables[row][col + 1] = true;
+            }
+          }
         }
       }
     }
@@ -193,7 +275,6 @@ module.exports = class Grid {
    * @returns
    */
   isMovementPossible(domino) {
-    console.log(domino);
     const testAdjacentCells = (row, col) => {
       if (this.testOccupiedCell(row, col) === null) {
         return true;

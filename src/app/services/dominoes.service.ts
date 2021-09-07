@@ -844,6 +844,7 @@ export class DominoesService {
   // Les prochains dominos à choisir
   public nextDominoes: Domino[] = [];
   private nextDominoesSubscription: Subscription;
+  private lastTurnSubscription: Subscription;
 
   private myGridSubscription: Subscription;
   private myDroppablesSubscription: Subscription;
@@ -867,6 +868,11 @@ export class DominoesService {
       .subscribe((value) => {
         this.nextDominoes = value;
       });
+
+    this.lastTurnSubscription = this.websocket.lastTurn$.subscribe(() => {
+      this.currentDominoes = this.nextDominoes;
+      this.lastTurnSubscription.unsubscribe();
+    });
 
     this.myGridSubscription = this.websocket.myGrid$
       .pipe(map((value: GridFromServer[]) => this.completeGrid(value)))

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" (mouseleave)="displayDomino = false">
   <div class="grille">
       <div *ngFor="let row of dominoService.grille" class="row">
         <div *ngFor="let case of row" class="col">

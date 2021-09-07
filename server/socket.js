@@ -138,6 +138,7 @@ module.exports = (io) => {
             data: nextPlayer.pseudo,
           });
         } else {
+          // Tour de jeu normal
           io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
           console.log("current", game.currentDominoes);
           if (
@@ -145,6 +146,14 @@ module.exports = (io) => {
               game.getOneDomino(game.currentDominoes[0])
             )
           ) {
+            // Si un mouvement est possible
+
+            socket.emit(
+              "droppables",
+              playersModule.currentPlayer.grid.sendDroppables(
+                game.getOneDomino(game.currentDominoes[0])
+              )
+            );
             socket.emit("moveDomino", playersModule.currentPlayer.uid);
             playersModule.currentPlayer.canPlaceDomino = true;
           } else {
@@ -193,10 +202,6 @@ module.exports = (io) => {
             playersModule.currentPlayer.uid
           );
           socket.emit("myGrid", playerGrid);
-          socket.emit(
-            "droppables",
-            playersModule.currentPlayer.grid.sendDroppables()
-          );
           socket
             .to(rooms[0])
             .emit("grids", playerGrid, playersModule.currentPlayer.index);
@@ -207,7 +212,7 @@ module.exports = (io) => {
             // Les dominos sont tous placés, on passe au tour suivant
             game.newTurn();
             io.to(rooms[0]).emit("logs", `${game.turn}ème tour.`);
-            if (lastTurn) {
+            if (game.lastTurn) {
               io.to(rooms[0]).emit("lastTurn");
             } else {
               io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
