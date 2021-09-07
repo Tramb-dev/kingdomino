@@ -4,6 +4,7 @@ module.exports = class Game extends Dominoes {
   gameLaunched = false;
   turn = 0;
   numberOfPlayers = 0;
+  lastTurn = false;
 
   constructor(playerModule) {
     super();
@@ -28,6 +29,9 @@ module.exports = class Game extends Dominoes {
   }
 
   newTurn() {
+    if (this.pickedDominoes.length === this.numberOfDominoesInGame) {
+      this.lastTurn = true;
+    }
     this.king = 0;
     this.domino = 0;
     this.turn++;
@@ -48,5 +52,6 @@ module.exports = class Game extends Dominoes {
     this.turn = 0;
     this.king = 0;
     this.domino = 0;
+    this.lastTurn = false;
   }
 };

@@ -9,8 +9,8 @@ const chalk = require("chalk");
 const rooms = [0, 1, 2, 3];
 
 // Réaliser une instance du jeu par salon
-playersModule = new Players();
-game = new Game(playersModule);
+var playersModule = new Players();
+var game = new Game(playersModule);
 
 module.exports = (io) => {
   io.on("connection", (socket) => {
@@ -82,6 +82,9 @@ module.exports = (io) => {
           playersModule.room.length > 1
         ) {
           game.init();
+          playersModule.room.forEach(
+            (player) => (player.canAccessToGame = true)
+          );
           io.to(rooms[0]).emit("startGame");
         }
       }
@@ -171,6 +174,10 @@ module.exports = (io) => {
             playersModule.currentPlayer.uid
           );
           socket.emit("myGrid", playerGrid);
+          socket.emit(
+            "droppables",
+            playersModule.currentPlayer.grid.sendDroppables()
+          );
           socket
             .to(rooms[0])
             .emit("grids", playerGrid, playersModule.currentPlayer.index);
@@ -205,7 +212,6 @@ module.exports = (io) => {
 
     socket.on("disconnect", () => {
       console.log(chalk.yellow.italic("connection perdue"));
-      game.destroy();
 
       const playerToDelete = playersModule.room.find((element) => {
         return element.sid === socket.id;
@@ -216,7 +222,9 @@ module.exports = (io) => {
           playersModule.room.indexOf(playerToDelete),
           1
         );
-        socket.broadcast.emit("allPlayers", playersModule.sendPlayers());
+        socket.broadcast.emit("lostConnection", playerToDelete.pseudo);
+        playersModule = new Players();
+        game = new Game(playersModule);
       }
     });
   });

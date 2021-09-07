@@ -17,14 +17,18 @@ export class LogsService {
       (value: Messages) => {
         switch (value.type) {
           case 'isTurnOf':
-            this.messageToDisplay = `C'est au tour de ${value.data}`;
+            this.messageToDisplay = `C'est au tour de ${value.data}.`;
             break;
 
           case 'yourTurn':
-            this.messageToDisplay = `C'est à votre tour de jouer ${value.data}`;
+            this.messageToDisplay = `C'est à votre tour de jouer ${value.data}.`;
             break;
         }
       }
     );
+
+    this.websocket.lostConnection.then((value: string) => {
+      this.messageToDisplay = `Le joueur ${value} s'est déconnecté. Fin de la partie. :(`;
+    });
   }
 }

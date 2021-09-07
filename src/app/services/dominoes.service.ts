@@ -3,7 +3,12 @@ import { Subscription } from 'rxjs';
 
 import { WebsocketService } from './websocket.service';
 
-import { Domino, Case, PlacedDomino } from '../interfaces/interfaces';
+import {
+  Domino,
+  Case,
+  PlacedDomino,
+  GridFromServer,
+} from '../interfaces/interfaces';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -860,6 +865,7 @@ export class DominoesService {
   public nextDominoesSubscription: Subscription;
 
   public myGridSubscription: Subscription;
+  public myDroppablesSubscription: Subscription;
 
   constructor(private websocket: WebsocketService) {
     this.currentDominoesSubscription = this.websocket.currentDominoes$
@@ -880,43 +886,20 @@ export class DominoesService {
       });
 
     this.myGridSubscription = this.websocket.myGrid$
-      .pipe(
-        map((value: any[]) => {
-          return value.map((element) => {
-            const domino = this.allDominoes.find(
-              (x) => x.numero === element.numero
-            );
-
-            return {
-              numero: element.numero,
-              orientation: element.orientation,
-              rotate: element.orientation * 90,
-              position: domino
-                ? domino.position
-                : {
-                    left: 0,
-                    top: 0,
-                  },
-              gridPosition: {
-                row: element.gridPosition.row,
-                col: element.gridPosition.col,
-                left:
-                  element.orientation % 2 === 0
-                    ? element.gridPosition.col * 100
-                    : element.gridPosition.col * 100 - 50,
-                top:
-                  element.orientation % 2 === 0
-                    ? element.gridPosition.row * 100
-                    : element.gridPosition.row * 100 + 50,
-              },
-            };
-          });
-        })
-      )
+      .pipe(map((value: GridFromServer[]) => this.completeGrid(value)))
       .subscribe((value: PlacedDomino[]) => {
         this.myPlacedDominoes = value;
-        console.log(this.myPlacedDominoes);
       });
+
+    this.myDroppablesSubscription = this.websocket.myDroppable$.subscribe(
+      (value: boolean[][]) => {
+        for (let row = 0; row < 5; row++) {
+          for (let col = 0; col < 5; col++) {
+            this.grille[row][col].isDroppable = value[row][col];
+          }
+        }
+      }
+    );
   }
 
   createGrille(): void {
@@ -964,5 +947,38 @@ export class DominoesService {
       completeDominoes.push(this.allDominoes[index]);
     }
     return completeDominoes;
+  }
+
+  completeGrid(arrayOfDominoesPlaced: GridFromServer[]): PlacedDomino[] {
+    return arrayOfDominoesPlaced.map((element) => {
+      const domino = this.allDominoes.find((x) => x.numero === element.numero);
+      this.grille[element.gridPosition.row][
+        element.gridPosition.col
+      ].isDroppable = false;
+
+      return {
+        numero: element.numero,
+        orientation: element.orientation,
+        rotate: element.orientation * 90,
+        position: domino
+          ? domino.position
+          : {
+              left: 0,
+              top: 0,
+            },
+        gridPosition: {
+          row: element.gridPosition.row,
+          col: element.gridPosition.col,
+          left:
+            element.orientation % 2 === 0
+              ? element.gridPosition.col * 100
+              : element.gridPosition.col * 100 - 50,
+          top:
+            element.orientation % 2 === 0
+              ? element.gridPosition.row * 100
+              : element.gridPosition.row * 100 + 50,
+        },
+      };
+    });
   }
 }

@@ -3,14 +3,13 @@
       <div *ngFor="let row of dominoService.grille" class="row">
         <div *ngFor="let case of row" class="col">
           <div
-            *ngIf="case.isDroppable"
+            *ngIf="case.contenu != 'chateau'"
             class="case drop-target"
   
             (mouseover)="mouseOver($event)"
             [attr.data-col]="case.position.colonne"
             [attr.data-row]="case.position.ligne"
           ></div>
-          <div *ngIf="!case.isDroppable && case.contenu !== 'chateau'" [ngClass]="{'case': case.contenu === null}"></div>
           <div *ngIf="case.contenu === 'chateau'" [ngClass]="'castle'" [id]="playerColor"></div>
         </div>
       </div>

@@ -45,3 +45,12 @@ export interface GridPosition {
   col: number;
   row: number;
 }
+
+export interface GridFromServer {
+  numero: number;
+  orientation: number;
+  gridPosition: {
+    row: number;
+    col: number;
+  };
+}

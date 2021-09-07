@@ -5,6 +5,7 @@ module.exports = class Dominoes {
   pickedDominoes = [];
   nextPickedDominoes = [];
   numberOfDisplayedDominoes = 4;
+  numberOfDominoesInGame = 0;
   king = 0;
   domino = 0;
 
@@ -26,8 +27,19 @@ module.exports = class Dominoes {
   initDominoes(numberOfPlayers) {
     this.remainingDominoes = Array.from({ length: 48 }, (v, k) => k + 1);
 
-    if (numberOfPlayers === 3) {
-      this.numberOfDisplayedDominoes = 3;
+    switch (numberOfPlayers) {
+      case 2:
+        this.numberOfDominoesInGame = 24;
+        break;
+
+      case 3:
+        this.numberOfDominoesInGame = 36;
+        this.numberOfDisplayedDominoes = 3;
+        break;
+
+      case 4:
+        this.numberOfDominoesInGame = 48;
+        break;
     }
 
     this.shuffleDominoes();

@@ -20,7 +20,7 @@ export class PlayerInfoService {
     pseudo: '',
     color: 'green',
     score: 0,
-    canAccessToLobby: true, // TODO: changer la valeur à false
+    canAccessToLobby: false, // TODO: changer la valeur à false
     canAccessToGame: false,
     readyToPlay: false,
     canPlaceDomino: true,
@@ -55,6 +55,8 @@ export class PlayerInfoService {
         canPlaceKing: false,
         canPlaceDomino: false,
         isTurn: false,
+        canAccessToLobby: false,
+        canAccessToGame: false,
       },
     ];
 

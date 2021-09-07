@@ -23,7 +23,14 @@ export class DominoesAndKingdomsComponent implements OnInit {
   }
 
   rotate(direction: number): void {
-    this.dominoService.currentDominoes[0].orientation += direction;
+    if (
+      direction < 0 &&
+      this.dominoService.currentDominoes[0].orientation === 0
+    ) {
+      this.dominoService.currentDominoes[0].orientation = 3;
+    } else {
+      this.dominoService.currentDominoes[0].orientation += direction;
+    }
     this.dominoService.currentDominoes[0].rotate += direction * 90;
   }
 }

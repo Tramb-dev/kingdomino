@@ -30,6 +30,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.websocket.startGameMessage.then(() => {
       this.displayCounter = true;
+      this.playerInfo.player.canAccessToGame = true;
       const interval = setInterval(() => {
         this.secondes--;
         if (this.secondes === 0) {

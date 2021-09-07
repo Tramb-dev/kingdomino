@@ -11,11 +11,11 @@ import { PlayerInfoService } from '../services/player-info.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ToLobbyGuard implements CanActivate {
+export class ToGameGuard implements CanActivate {
   private canAccess: boolean;
   constructor(playerInfo: PlayerInfoService) {
-    this.canAccess = playerInfo.player.canAccessToLobby
-      ? playerInfo.player.canAccessToLobby
+    this.canAccess = playerInfo.player.canAccessToGame
+      ? playerInfo.player.canAccessToGame
       : false;
   }
   canActivate(

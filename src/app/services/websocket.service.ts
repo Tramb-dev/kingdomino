@@ -3,6 +3,7 @@ import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 
 import { Player } from 'src/app/interfaces/player';
+import { GridFromServer } from '../interfaces/interfaces';
 import { Messages } from '../interfaces/messages';
 
 @Injectable({
@@ -44,7 +45,14 @@ export class WebsocketService {
   public moveDomino$: Observable<string> = this.socket.fromEvent('moveDomino');
 
   // Reçoit la grille du joueur avec les dominos dessus
-  public myGrid$: Observable<Object[]> = this.socket.fromEvent('myGrid');
+  public myGrid$: Observable<GridFromServer[]> =
+    this.socket.fromEvent('myGrid');
+
+  public myDroppable$: Observable<boolean[][]> =
+    this.socket.fromEvent('droppables');
+
+  public lostConnection: Promise<string> =
+    this.socket.fromOneTimeEvent('lostConnection');
 
   constructor(private socket: Socket) {}
 
