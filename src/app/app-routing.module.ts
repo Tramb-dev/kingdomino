@@ -9,8 +9,14 @@ import { LobbyComponent } from './views/lobby/lobby.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'lobby', component: LobbyComponent, canActivate: [ToLobbyGuard] },
-  { path: 'game', component: GameViewComponent, canActivate: [ToGameGuard] },
+  {
+    path: 'lobby',
+    component: LobbyComponent /* , canActivate: [ToLobbyGuard] */,
+  },
+  {
+    path: 'game',
+    component: GameViewComponent /* , canActivate: [ToGameGuard] */,
+  },
 ];
 
 @NgModule({

@@ -9,15 +9,15 @@ module.exports = class Dominoes {
   king = 0;
   domino = 0;
 
-  constructor() {} /* 
+  constructor() {}
 
   getAllDominoes() {
     return this.#allDominoes;
   }
 
   getOneDomino(number) {
-    return this.#allDominoes[number];
-  } */
+    return this.#allDominoes[number - 1];
+  }
 
   /**
    * Initialise la pile de dominos et renvoi le premier tirage
@@ -143,6 +143,10 @@ module.exports = class Dominoes {
     this.king++;
   }
 
+  /**
+   * Lorsque le joueur a placé son domino sur la grille, on met à jour la liste de domino avec la position de ce dernier, et on le retire de la liste des dominos courants
+   * @param {*} data
+   */
   playerHasPlacedDomino(data) {
     this.domino++;
     const indexOfPlacedDomino = this.pickedDominoes.findIndex(
@@ -154,6 +158,11 @@ module.exports = class Dominoes {
     this.currentDominoes.shift();
   }
 
+  /**
+   * Envoi la liste des dominos et leur positionnement sur la grille
+   * @param {*} uid
+   * @returns
+   */
   sendPlayerDominoesList(uid) {
     return this.pickedDominoes
       .filter((element) => element.uid === uid && element.placed)

@@ -3,20 +3,25 @@ import { Subscription } from 'rxjs';
 
 import { WebsocketService } from './websocket.service';
 
-import { Messages } from '../interfaces/messages';
+import { Messages, Log } from '../interfaces/messages';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LogsService {
-  public messagesSubscription: Subscription;
+  private messagesSubscription: Subscription;
   public messageToDisplay: string = '';
+  public logs: Log[] = [];
+  public dateLog: Date = new Date();
+  private logsSubcription: Subscription;
+  private nextDominoesSubscription: Subscription;
+  private lastTurnSubscription: Subscription;
 
   constructor(private websocket: WebsocketService) {
     this.messagesSubscription = this.websocket.messages$.subscribe(
       (value: Messages) => {
         switch (value.type) {
-          case 'isTurnOf':
+          case 'turnOf':
             this.messageToDisplay = `C'est au tour de ${value.data}.`;
             break;
 
@@ -29,6 +34,39 @@ export class LogsService {
 
     this.websocket.lostConnection.then((value: string) => {
       this.messageToDisplay = `Le joueur ${value} s'est déconnecté. Fin de la partie. :(`;
+    });
+
+    this.logsSubcription = this.websocket.logs$.subscribe((value: string) => {
+      const date = new Date();
+      const log = {
+        date:
+          date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+        log: value,
+      };
+      this.logs.unshift(log);
+    });
+
+    this.nextDominoesSubscription = this.websocket.nextDominoes$.subscribe(
+      (value: number[]) => {
+        const date = new Date();
+        const log = {
+          date:
+            date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+          log: `Nouveau dominos tirés : ${value}.`,
+        };
+        this.logs.unshift(log);
+      }
+    );
+
+    this.lastTurnSubscription = this.websocket.lastTurn$.subscribe(() => {
+      const date = new Date();
+      const log = {
+        date:
+          date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+        log: `Dernier tour !`,
+      };
+      this.logs.unshift(log);
+      this.lastTurnSubscription.unsubscribe();
     });
   }
 }

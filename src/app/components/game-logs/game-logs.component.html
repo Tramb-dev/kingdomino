@@ -1,1 +1,4 @@
-<p>game-logs works!</p>
+<div class="logs" *ngFor="let log of logsService.logs">
+    <div class="date">{{ log.date }}</div>
+    <p class="log">{{ log.log }}</p>
+</div>

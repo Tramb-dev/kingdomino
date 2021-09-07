@@ -186,4 +186,54 @@ module.exports = class Grid {
     }
     return false;
   }
+
+  /**
+   * Test si le joueur peut poser un domino (s'il reste de la place et qu'il a le droit de le poser).
+   * @param {*} domino
+   * @returns
+   */
+  isMovementPossible(domino) {
+    console.log(domino);
+    const testAdjacentCells = (row, col) => {
+      if (this.testOccupiedCell(row, col) === null) {
+        return true;
+      }
+      return false;
+    };
+
+    const leftContent = domino.left.contenu;
+    const rightContent = domino.right.contenu;
+
+    for (let row = 0; row < 5; row++) {
+      for (let col = 0; col < 5; col++) {
+        if (
+          this.grid[row][col].contenu === "chateau" ||
+          this.grid[row][col].contenu === leftContent ||
+          this.grid[row][col].contenu === rightContent
+        ) {
+          if (
+            (testAdjacentCells(row - 1, col) &&
+              (testAdjacentCells(row - 2, col) ||
+                testAdjacentCells(row - 1, col - 1) ||
+                testAdjacentCells(row - 1, col + 1))) ||
+            (testAdjacentCells(row + 1, col) &&
+              (testAdjacentCells(row + 2, col) ||
+                testAdjacentCells(row + 1, col - 1) ||
+                testAdjacentCells(row + 1, col + 1))) ||
+            (testAdjacentCells(row, col - 1) &&
+              (testAdjacentCells(row, col - 2) ||
+                testAdjacentCells(row - 1, col - 1) ||
+                testAdjacentCells(row + 1, col - 1))) ||
+            (testAdjacentCells(row, col + 1) &&
+              (testAdjacentCells(row, col + 2) ||
+                testAdjacentCells(row - 1, col + 1) ||
+                testAdjacentCells(row + 1, col + 1)))
+          ) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
 };

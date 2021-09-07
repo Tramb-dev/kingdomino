@@ -3,14 +3,7 @@ module.exports = class Players {
   nextTurnPlayerOrder = [];
   currentPlayer = {};
 
-  room = [
-    {
-      pseudo: "Tramb",
-      color: "blue",
-      uid: "1",
-      readyToPlay: true,
-    },
-  ];
+  room = [];
 
   /*
   player = {
@@ -75,7 +68,7 @@ module.exports = class Players {
    */
   sortPlayers() {
     // TODO: décommenter
-    /* let players = [];
+    let players = [];
     if (this.room.length > 2) {
       players = Array.from({ length: this.room.length }, (v, k) => k);
     } else {
@@ -84,9 +77,9 @@ module.exports = class Players {
     for (let i = players.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [players[i], players[j]] = [players[j], players[i]];
-    } 
-    this.playerOrder = players;*/
-    this.playerOrder = [1, 1, 1, 1];
+    }
+    this.playerOrder = players;
+    //this.playerOrder = [1, 1, 1, 1];
   }
 
   /**

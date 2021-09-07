@@ -16,7 +16,6 @@ import { map, tap } from 'rxjs/operators';
 })
 export class DominoesService {
   grille: Case[][] = [];
-  // TODO: Pour test
   public myPlacedDominoes: PlacedDomino[] = [];
   private allDominoes: Domino[] = [
     {
@@ -839,33 +838,17 @@ export class DominoesService {
 
   // Les dominos sur lesquels on peut jouer
   // TODO: pour test
-  public currentDominoes: Domino[] = [
-    {
-      numero: 24,
-      orientation: 0,
-      rotate: 0,
-      position: {
-        left: -415,
-        top: -330,
-      },
-      left: {
-        couronnes: 1,
-        contenu: 'foret',
-      },
-      right: {
-        couronnes: 0,
-        contenu: 'ble',
-      },
-    },
-  ];
-  public currentDominoesSubscription: Subscription;
+  public currentDominoes: Domino[] = [];
+  private currentDominoesSubscription: Subscription;
 
   // Les prochains dominos à choisir
   public nextDominoes: Domino[] = [];
-  public nextDominoesSubscription: Subscription;
+  private nextDominoesSubscription: Subscription;
 
-  public myGridSubscription: Subscription;
-  public myDroppablesSubscription: Subscription;
+  private myGridSubscription: Subscription;
+  private myDroppablesSubscription: Subscription;
+
+  private cannotPlaceDominoSubscription: Subscription;
 
   constructor(private websocket: WebsocketService) {
     this.currentDominoesSubscription = this.websocket.currentDominoes$
@@ -900,6 +883,13 @@ export class DominoesService {
         }
       }
     );
+
+    this.cannotPlaceDominoSubscription =
+      this.websocket.cannotPlaceDomino$.subscribe((value: number) => {
+        if (this.currentDominoes[0].numero === value) {
+          this.currentDominoes.shift;
+        }
+      });
   }
 
   createGrille(): void {
@@ -940,10 +930,10 @@ export class DominoesService {
     }
   }
 
-  completeDominoes(arrayOfDominoesNumbers: number[]) {
+  completeDominoes(arrayOfDisplayedDominoes: number[]) {
     const completeDominoes: Domino[] = [];
-    for (let i = 0; i < arrayOfDominoesNumbers.length; i++) {
-      const index = arrayOfDominoesNumbers[i] - 1;
+    for (let i = 0; i < arrayOfDisplayedDominoes.length; i++) {
+      const index = arrayOfDisplayedDominoes[i] - 1;
       completeDominoes.push(this.allDominoes[index]);
     }
     return completeDominoes;

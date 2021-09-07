@@ -5,23 +5,26 @@ module.exports = class Game extends Dominoes {
   turn = 0;
   numberOfPlayers = 0;
   lastTurn = false;
+  firstTurnOrder = [];
 
-  constructor(playerModule) {
+  constructor(playersModule) {
     super();
-    this.playerModule = playerModule;
+    this.playersModule = playersModule;
   }
 
   init() {
     this.gameLaunched = true;
-    this.numberOfPlayers = this.playerModule.room.length;
+    this.numberOfPlayers = this.playersModule.room.length;
     this.initDominoes(this.numberOfPlayers);
-    this.playerModule.sortPlayers();
+    this.playersModule.sortPlayers();
+    this.firstTurnOrder = Array.from(this.playersModule.playerOrder);
+    this.playersModule.nextPlayer();
 
-    this.playerModule.room.forEach((player) => {
+    this.playersModule.room.forEach((player) => {
       player.canAccessToGame = true;
     });
 
-    this.playerModule.nextTurnPlayerOrder = Array.from({
+    this.playersModule.nextTurnPlayerOrder = Array.from({
       length: this.numberOfDisplayedDominoes,
     });
 
@@ -29,13 +32,16 @@ module.exports = class Game extends Dominoes {
   }
 
   newTurn() {
-    if (this.pickedDominoes.length === this.numberOfDominoesInGame) {
+    if (
+      this.pickedDominoes.length ===
+      this.numberOfDominoesInGame - this.numberOfDisplayedDominoes
+    ) {
       this.lastTurn = true;
     }
     this.king = 0;
     this.domino = 0;
     this.turn++;
-    this.playerModule.playerOrder = this.playerModule.placePlayersForNextTurn(
+    this.playersModule.playerOrder = this.playersModule.placePlayersForNextTurn(
       this.nextPickedDominoes
     );
 
@@ -47,11 +53,10 @@ module.exports = class Game extends Dominoes {
     );
   }
 
-  destroy() {
-    this.gameLaunched = false;
-    this.turn = 0;
-    this.king = 0;
-    this.domino = 0;
-    this.lastTurn = false;
+  defausse() {
+    if (this.currentDominoes.length > 0) {
+      this.currentDominoes.shift();
+    }
+    return this.playersModule.nextPlayer();
   }
 };

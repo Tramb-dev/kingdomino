@@ -60,7 +60,7 @@ module.exports = (io) => {
     socket.on("chosenColor", (chosenColor) => {
       const player = playersModule.findPlayer(chosenColor.uid, socket.id);
 
-      if (player) {
+      if (player && !player.readyToPlay) {
         player.color = chosenColor.color;
         socket.emit("myPlayer", player);
         io.to(rooms[0]).emit("allPlayers", playersModule.sendPlayers());
@@ -82,9 +82,6 @@ module.exports = (io) => {
           playersModule.room.length > 1
         ) {
           game.init();
-          playersModule.room.forEach(
-            (player) => (player.canAccessToGame = true)
-          );
           io.to(rooms[0]).emit("startGame");
         }
       }
@@ -93,17 +90,15 @@ module.exports = (io) => {
     socket.on("startGame", () => {
       if (
         // TODO: pour debogage
-        game.gameLaunched //&&
-        //socket.id === playersModule.currentPlayer.sid
+        game.gameLaunched &&
+        socket.id === playersModule.currentPlayer.sid
       ) {
         io.to(rooms[0]).emit("nextDominoes", game.nextDominoes);
 
-        io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
-
-        playersModule.nextPlayer();
+        io.to(rooms[0]).emit("playersOrder", game.firstTurnOrder);
 
         socket.to(rooms[0]).emit("message", {
-          type: "isTurnOf",
+          type: "turnOf",
           data: playersModule.currentPlayer.pseudo,
         });
 
@@ -127,7 +122,7 @@ module.exports = (io) => {
           if (game.king === game.numberOfDisplayedDominoes) {
             // S'il n'y a plus de pion à placer lors du premier tour de jeu, on passe au premier tour de jeu
             game.newTurn();
-            io.to(rooms[0]).emit("newTurn", game.turn);
+            io.to(rooms[0]).emit("logs", `1er tour.`);
             io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
             io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
           } else {
@@ -144,10 +139,34 @@ module.exports = (io) => {
           });
         } else {
           io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
-          socket.emit("moveDomino", playersModule.currentPlayer.uid);
+          console.log("current", game.currentDominoes);
+          if (
+            playersModule.currentPlayer.grid.isMovementPossible(
+              game.getOneDomino(game.currentDominoes[0])
+            )
+          ) {
+            socket.emit("moveDomino", playersModule.currentPlayer.uid);
+            playersModule.currentPlayer.canPlaceDomino = true;
+          } else {
+            // Si le joueur ne peut pas déposer son domino, il doit le défausser
+            io.to(rooms[0]).emit(
+              "logs",
+              `${playersModule.currentPlayer.pseudo} ne peut pas poser son domino !`
+            );
+            socket.emit("cannotPlaceDomino", game.currentDominoes[0]);
+
+            const nextPlayer = game.defausse();
+            io.to(rooms[0]).emit("message", {
+              type: "turnOf",
+              data: nextPlayer.pseudo,
+            });
+            io.to(nextPlayer.sid).emit("message", {
+              type: "yourTurn",
+              data: nextPlayer.pseudo,
+            });
+          }
 
           playersModule.currentPlayer.canPlaceKing = false;
-          playersModule.currentPlayer.canPlaceDomino = true;
         }
       }
     });
@@ -187,8 +206,12 @@ module.exports = (io) => {
           if (game.domino === 4) {
             // Les dominos sont tous placés, on passe au tour suivant
             game.newTurn();
-            io.to(rooms[0]).emit("newTurn", game.turn);
-            io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
+            io.to(rooms[0]).emit("logs", `${game.turn}ème tour.`);
+            if (lastTurn) {
+              io.to(rooms[0]).emit("lastTurn");
+            } else {
+              io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
+            }
             io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
           }
 
@@ -222,9 +245,11 @@ module.exports = (io) => {
           playersModule.room.indexOf(playerToDelete),
           1
         );
-        socket.broadcast.emit("lostConnection", playerToDelete.pseudo);
-        playersModule = new Players();
-        game = new Game(playersModule);
+        if (game.gameLaunched) {
+          socket.broadcast.emit("lostConnection", playerToDelete.pseudo);
+          playersModule = new Players();
+          game = new Game(playersModule);
+        }
       }
     });
   });

@@ -28,15 +28,15 @@ export class PlayerInfoService {
     isTurn: false,
   };
   public players: Player[] = [];
-  public myPlayerSubscription: Subscription;
-  public allPlayersSubscription: Subscription;
-  public playersOrderSubcription: Subscription;
-  public playerMessageSubscription: Subscription;
-  public nextPickedDominoesSubscription: Subscription;
-  public moveDominoSubscription: Subscription;
+  private myPlayerSubscription: Subscription;
+  private allPlayersSubscription: Subscription;
+  private playersOrderSubcription: Subscription;
+  private playerMessageSubscription: Subscription;
+  private nextPickedDominoesSubscription: Subscription;
+  private moveDominoSubscription: Subscription;
   public playersOrder: Player[] = [];
   public kingsPosition: King[] = [];
-  public currentDominoesSubscription: Subscription;
+  private currentDominoesSubscription: Subscription;
   public castles: Castles = {
     pink: false,
     green: false,
@@ -46,7 +46,7 @@ export class PlayerInfoService {
 
   constructor(private socket: Socket, private websocket: WebsocketService) {
     // TODO: Pour test uniquement
-    this.players = [
+    /* this.players = [
       {
         pseudo: 'Tramb',
         color: 'blue',
@@ -58,7 +58,7 @@ export class PlayerInfoService {
         canAccessToLobby: false,
         canAccessToGame: false,
       },
-    ];
+    ]; */
 
     this.myPlayerSubscription = this.websocket.player$.subscribe((value) => {
       this.player = value;

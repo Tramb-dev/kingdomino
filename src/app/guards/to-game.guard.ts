@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
+  Router,
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
@@ -13,7 +14,7 @@ import { PlayerInfoService } from '../services/player-info.service';
 })
 export class ToGameGuard implements CanActivate {
   private canAccess: boolean;
-  constructor(playerInfo: PlayerInfoService) {
+  constructor(playerInfo: PlayerInfoService, private router: Router) {
     this.canAccess = playerInfo.player.canAccessToGame
       ? playerInfo.player.canAccessToGame
       : false;
@@ -29,7 +30,7 @@ export class ToGameGuard implements CanActivate {
     if (this.canAccess) {
       return true;
     } else {
-      return false;
+      return this.router.navigate(['/', 'home']);
     }
   }
 }
