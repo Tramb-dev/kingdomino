@@ -15,6 +15,7 @@ export class LogsService {
   public dateLog: Date = new Date();
   private logsSubcription: Subscription;
   private nextDominoesSubscription: Subscription;
+  private lastPickSubscription: Subscription;
   private lastTurnSubscription: Subscription;
 
   constructor(private websocket: WebsocketService) {
@@ -57,6 +58,17 @@ export class LogsService {
         this.logs.unshift(log);
       }
     );
+
+    this.lastPickSubscription = this.websocket.lastPick$.subscribe(() => {
+      const date = new Date();
+      const log = {
+        date:
+          date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds(),
+        log: `Dernier choix de domino, choisissez bien !`,
+      };
+      this.logs.unshift(log);
+      this.lastPickSubscription.unsubscribe();
+    });
 
     this.lastTurnSubscription = this.websocket.lastTurn$.subscribe(() => {
       const date = new Date();

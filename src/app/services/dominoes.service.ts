@@ -844,7 +844,10 @@ export class DominoesService {
   // Les prochains dominos à choisir
   public nextDominoes: Domino[] = [];
   private nextDominoesSubscription: Subscription;
+  private lastPickSubscription: Subscription;
+
   private lastTurnSubscription: Subscription;
+  public lastTurn = false;
 
   private myGridSubscription: Subscription;
   private myDroppablesSubscription: Subscription;
@@ -869,8 +872,14 @@ export class DominoesService {
         this.nextDominoes = value;
       });
 
+    this.lastPickSubscription = this.websocket.lastPick$.subscribe(() => {
+      //this.currentDominoes = this.nextDominoes;
+      this.lastPickSubscription.unsubscribe();
+    });
+
     this.lastTurnSubscription = this.websocket.lastTurn$.subscribe(() => {
-      this.currentDominoes = this.nextDominoes;
+      this.lastTurn = true;
+      [this.currentDominoes, this.nextDominoes] = [this.nextDominoes, []];
       this.lastTurnSubscription.unsubscribe();
     });
 

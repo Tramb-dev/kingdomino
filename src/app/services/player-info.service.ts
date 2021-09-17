@@ -37,6 +37,8 @@ export class PlayerInfoService {
   public playersOrder: Player[] = [];
   public kingsPosition: King[] = [];
   private currentDominoesSubscription: Subscription;
+  private lastTurnSubscription: Subscription;
+  public lastTurn = false;
   public castles: Castles = {
     pink: false,
     green: false,
@@ -45,21 +47,6 @@ export class PlayerInfoService {
   };
 
   constructor(private socket: Socket, private websocket: WebsocketService) {
-    // TODO: Pour test uniquement
-    /* this.players = [
-      {
-        pseudo: 'Tramb',
-        color: 'blue',
-        uid: '1',
-        readyToPlay: true,
-        canPlaceKing: false,
-        canPlaceDomino: false,
-        isTurn: false,
-        canAccessToLobby: false,
-        canAccessToGame: false,
-      },
-    ]; */
-
     this.myPlayerSubscription = this.websocket.player$.subscribe((value) => {
       this.player = value;
     });
@@ -102,6 +89,11 @@ export class PlayerInfoService {
         this.playersOrder = value;
       });
 
+    this.lastTurnSubscription = this.websocket.lastTurn$.subscribe(() => {
+      this.lastTurn = true;
+      this.lastTurnSubscription.unsubscribe();
+    });
+
     this.playerMessageSubscription = this.websocket.messages$.subscribe(
       (value: Messages) => {
         switch (value.type) {
@@ -113,7 +105,12 @@ export class PlayerInfoService {
 
           case 'yourTurn':
             this.player.isTurn = true;
-            this.player.canPlaceKing = true;
+            if (this.lastTurn) {
+              this.player.canPlaceDomino = true;
+              this.player.canPlaceKing = false;
+            } else {
+              this.player.canPlaceKing = true;
+            }
             break;
 
           case 'turnOf':

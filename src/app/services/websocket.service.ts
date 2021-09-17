@@ -59,6 +59,8 @@ export class WebsocketService {
 
   public lastTurn$: Observable<never> = this.socket.fromEvent('lastTurn');
 
+  public lastPick$: Observable<never> = this.socket.fromEvent('lastPick');
+
   // Message reçu lorsqu'un joueur se deconnecte, provoquant la fin du jeu
   public lostConnection: Promise<string> =
     this.socket.fromOneTimeEvent('lostConnection');

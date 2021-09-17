@@ -45,40 +45,6 @@ module.exports = class Grid {
    * @returns la grille de booléens
    */
   sendDroppables(domino) {
-    /* const makeACellDroppable = (row, col) => {
-      if (this.testOccupiedCell(row, col) === null) {
-        this.droppables[row][col] = true;
-        return true;
-      }
-      return false;
-    };
-
-    const testAdjacentCells = (row, col) => {
-      if (
-        this.testOccupiedCell(row, col) === null &&
-        (makeACellDroppable(row - 1, col) ||
-          makeACellDroppable(row + 1, col) ||
-          makeACellDroppable(row, col - 1) ||
-          makeACellDroppable(row, col + 1))
-      ) {
-        this.droppables[row][col] = true;
-      }
-    };
-
-    for (let row = 0; row < 5; row++) {
-      for (let col = 0; col < 5; col++) {
-        const contenu = this.testOccupiedCell(row, col);
-        if (contenu) {
-          this.droppables[row][col] = false;
-          testAdjacentCells(row - 1, col);
-          testAdjacentCells(row + 1, col);
-          testAdjacentCells(row, col - 1);
-          testAdjacentCells(row, col + 1);
-        }
-      }
-    }
-    return this.droppables; */
-
     this.droppables = Array.from({ length: 5 }, (v, k) => {
       return (k = Array.from({ length: 5 }, (v, k) => (k = false)));
     });

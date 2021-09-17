@@ -5,21 +5,6 @@ module.exports = class Players {
 
   room = [];
 
-  /*
-  player = {
-    pseudo: string;
-    color: string;
-    index: number;
-    uid: string;
-    sid: string;
-    readyToPlay: boolean;
-    canAccessToLobby: boolean;
-    canAccessToGame: boolean;
-    score: number;
-    canPlaceKing: boolean;
-  }
-
-  */
   constructor() {}
   /**
    * Modifie le pseudo s'il est déjà pris en ajoutant des chiffres aléatoirement
@@ -79,7 +64,6 @@ module.exports = class Players {
       [players[i], players[j]] = [players[j], players[i]];
     }
     this.playerOrder = players;
-    //this.playerOrder = [1, 1, 1, 1];
   }
 
   /**
@@ -88,6 +72,9 @@ module.exports = class Players {
   nextPlayer() {
     this.currentPlayer.canPlaceKing = false;
 
+    if (this.playerOrder.length === 0) {
+      return false;
+    }
     const index = this.playerOrder.shift();
     this.currentPlayer = this.room[index];
     this.currentPlayer.index = index;
@@ -96,7 +83,7 @@ module.exports = class Players {
   }
 
   /**
-   * Garde en mémoire la position des joueurs via leurs pions pour le prochain tour, uen fois qu'ils ont tous sélectionné leurs dominos
+   * Garde en mémoire la position des joueurs via leurs pions pour le prochain tour, une fois qu'ils ont tous sélectionné leurs dominos
    * @param {*} pickedDominoes
    * @returns
    */

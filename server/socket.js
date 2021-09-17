@@ -109,73 +109,17 @@ module.exports = (io) => {
       }
     });
 
-    // Réception d'un choix de domino
+    // Réception d'un choix de domino en positionnant un roi
     socket.on("chosenDomino", (numero) => {
       if (
         socket.id === playersModule.currentPlayer.sid &&
         game.findDominoToPick(numero) &&
         playersModule.currentPlayer.canPlaceKing
       ) {
-        game.playerHasPickedDomino(numero, playersModule.currentPlayer);
-
         if (game.turn === 0) {
-          if (game.king === game.numberOfDisplayedDominoes) {
-            // S'il n'y a plus de pion à placer lors du premier tour de jeu, on passe au premier tour de jeu
-            game.newTurn();
-            io.to(rooms[0]).emit("logs", `1er tour.`);
-            io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
-            io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
-          } else {
-            io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
-          }
-          const nextPlayer = playersModule.nextPlayer();
-          io.to(rooms[0]).emit("message", {
-            type: "turnOf",
-            data: nextPlayer.pseudo,
-          });
-          io.to(nextPlayer.sid).emit("message", {
-            type: "yourTurn",
-            data: nextPlayer.pseudo,
-          });
+          game.firstTurnKing(io, socket, rooms[0], numero);
         } else {
-          // Tour de jeu normal
-          io.to(rooms[0]).emit("nextPickedDominoes", game.nextPickedDominoes);
-          console.log("current", game.currentDominoes);
-          if (
-            playersModule.currentPlayer.grid.isMovementPossible(
-              game.getOneDomino(game.currentDominoes[0])
-            )
-          ) {
-            // Si un mouvement est possible
-
-            socket.emit(
-              "droppables",
-              playersModule.currentPlayer.grid.sendDroppables(
-                game.getOneDomino(game.currentDominoes[0])
-              )
-            );
-            socket.emit("moveDomino", playersModule.currentPlayer.uid);
-            playersModule.currentPlayer.canPlaceDomino = true;
-          } else {
-            // Si le joueur ne peut pas déposer son domino, il doit le défausser
-            io.to(rooms[0]).emit(
-              "logs",
-              `${playersModule.currentPlayer.pseudo} ne peut pas poser son domino !`
-            );
-            socket.emit("cannotPlaceDomino", game.currentDominoes[0]);
-
-            const nextPlayer = game.defausse();
-            io.to(rooms[0]).emit("message", {
-              type: "turnOf",
-              data: nextPlayer.pseudo,
-            });
-            io.to(nextPlayer.sid).emit("message", {
-              type: "yourTurn",
-              data: nextPlayer.pseudo,
-            });
-          }
-
-          playersModule.currentPlayer.canPlaceKing = false;
+          game.nTurnKing(io, socket, rooms[0], numero);
         }
       }
     });
@@ -208,19 +152,40 @@ module.exports = (io) => {
 
           playersModule.currentPlayer.canPlaceDomino = false;
 
+          // Todo remplacer 4 par le nombre de dominos displayed
           if (game.domino === 4) {
             // Les dominos sont tous placés, on passe au tour suivant
             game.newTurn();
             io.to(rooms[0]).emit("logs", `${game.turn}ème tour.`);
             if (game.lastTurn) {
               io.to(rooms[0]).emit("lastTurn");
+
+              if (
+                playersModule.currentPlayer.grid.isMovementPossible(
+                  game.getOneDomino(game.currentDominoes[0])
+                )
+              ) {
+                // Si un mouvement est possible
+
+                socket.emit(
+                  "droppables",
+                  playersModule.currentPlayer.grid.sendDroppables(
+                    game.getOneDomino(game.currentDominoes[0])
+                  )
+                );
+                socket.emit("moveDomino", playersModule.currentPlayer.uid);
+                playersModule.currentPlayer.canPlaceDomino = true;
+              }
             } else {
+              if (game.lastPick) {
+                io.to(rooms[0]).emit("lastPick");
+              }
               io.to(rooms[0]).emit("nextDominoes", game.changeNextToCurrent());
             }
             io.to(rooms[0]).emit("playersOrder", playersModule.playerOrder);
           }
 
-          const nextPlayer = playersModule.nextPlayer();
+          const nextPlayer = game.nextPlayer();
           io.to(rooms[0]).emit("message", {
             type: "turnOf",
             data: nextPlayer.pseudo,
@@ -235,7 +200,9 @@ module.exports = (io) => {
             data: "ko",
           });
         }
-      }
+      } /*  else if () {
+        // Dernier tour
+      } */
     });
 
     socket.on("disconnect", () => {
