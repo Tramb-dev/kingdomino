@@ -844,7 +844,6 @@ export class DominoesService {
   // Les prochains dominos à choisir
   public nextDominoes: Domino[] = [];
   private nextDominoesSubscription: Subscription;
-  private lastPickSubscription: Subscription;
 
   private lastTurnSubscription: Subscription;
   public lastTurn = false;
@@ -871,11 +870,6 @@ export class DominoesService {
       .subscribe((value) => {
         this.nextDominoes = value;
       });
-
-    this.lastPickSubscription = this.websocket.lastPick$.subscribe(() => {
-      //this.currentDominoes = this.nextDominoes;
-      this.lastPickSubscription.unsubscribe();
-    });
 
     this.lastTurnSubscription = this.websocket.lastTurn$.subscribe(() => {
       this.lastTurn = true;

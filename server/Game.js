@@ -76,6 +76,13 @@ module.exports = class Game extends Dominoes {
     return nextPlayer;
   }
 
+  /**
+   * Gère le démarrage du jeu où les joueurs doivent choisir leurs premiers dominos
+   * @param {*} io
+   * @param {*} socket
+   * @param {*} room le salon du joueur
+   * @param {*} numero le numéro du domino choisit avec son pion
+   */
   firstTurnKing(io, socket, room, numero) {
     this.playerHasPickedDomino(numero, this.playersModule.currentPlayer);
     if (this.king === this.numberOfDisplayedDominoes) {
@@ -91,6 +98,13 @@ module.exports = class Game extends Dominoes {
     this.whosNext(io, room, nextPlayer);
   }
 
+  /**
+   * La gestion des tours suivants lors de la pose des pions
+   * @param {*} io
+   * @param {*} socket
+   * @param {*} room le salon du joueur
+   * @param {*} numero le numéro du domino choisit avec son pion
+   */
   nTurnKing(io, socket, room, numero) {
     this.playerHasPickedDomino(numero, this.playersModule.currentPlayer);
     io.to(room).emit("nextPickedDominoes", this.nextPickedDominoes);
@@ -124,7 +138,84 @@ module.exports = class Game extends Dominoes {
     this.playersModule.currentPlayer.canPlaceKing = false;
   }
 
-  nTurnDomino(io, socket, room, data) {}
+  /**
+   * Gestion de la pose des dominos au long de la partie
+   * @param {*} io
+   * @param {*} socket
+   * @param {*} room le salon du joueur
+   * @param {*} data les données envoyées par le client du joueur
+   */
+  nTurnDomino(io, socket, room, data) {
+    // Test si le joueur peut poser son domino sur sa grille de jeu
+    const grid = this.playersModule.currentPlayer.grid.placeDominoOnGrid(data);
+    if (grid) {
+      // Si le joueur peut effectivement placer son domino
+      this.playerHasPlacedDomino(data);
+
+      if (this.currentDominoes.length > 0) {
+        // Si tous les dominos n'ont pas encore été posés, on envoit les dominos restant aux joueurs
+        io.to(room).emit("currentDominoes", this.currentDominoes);
+      }
+      socket.emit("message", {
+        type: "placedDomino",
+        data: "ok",
+      });
+      const playerGrid = this.sendPlayerDominoesList(
+        this.playersModule.currentPlayer.uid
+      );
+      socket.emit("myGrid", playerGrid);
+      socket
+        .to(room)
+        .emit("grids", playerGrid, this.playersModule.currentPlayer.index);
+
+      this.playersModule.currentPlayer.canPlaceDomino = false;
+
+      if (this.domino === this.numberOfDisplayedDominoes) {
+        // Les dominos sont tous placés, on passe au tour suivant
+        this.newTurn();
+        io.to(room).emit("logs", `${this.turn}ème tour.`);
+        if (this.lastTurn) {
+          // Si c'est le dernier tour
+          this.lastTurn(io, socket, room, data);
+        } else {
+          if (this.lastPick) {
+            io.to(room).emit("lastPick");
+          }
+          io.to(room).emit("nextDominoes", this.changeNextToCurrent());
+        }
+        io.to(room).emit("playersOrder", this.playersModule.playerOrder);
+      }
+
+      const nextPlayer = this.nextPlayer();
+      this.whosNext(io, room, nextPlayer);
+    } else {
+      socket.emit("message", {
+        type: "placedDomino",
+        data: "ko",
+      });
+    }
+  }
+
+  lastTurn(io, socket, room, data) {
+    io.to(room).emit("lastTurn");
+
+    if (
+      this.playersModule.currentPlayer.grid.isMovementPossible(
+        this.getOneDomino(this.currentDominoes[0])
+      )
+    ) {
+      // Si un mouvement est possible
+
+      socket.emit(
+        "droppables",
+        this.playersModule.currentPlayer.grid.sendDroppables(
+          this.getOneDomino(this.currentDominoes[0])
+        )
+      );
+      socket.emit("moveDomino", this.playersModule.currentPlayer.uid);
+      this.playersModule.currentPlayer.canPlaceDomino = true;
+    }
+  }
 
   /**
    * Envoi des messages permettant de connaître le joueur dont c'est le tour de jeu
