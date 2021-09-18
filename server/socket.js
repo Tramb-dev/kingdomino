@@ -131,7 +131,9 @@ module.exports = (io) => {
         game.findDominoToPlace(data.numero) &&
         playersModule.currentPlayer.canPlaceDomino
       ) {
-        game.nTurnKing(io, socket, rooms[0], data);
+        game.nTurnDomino(io, socket, rooms[0], data);
+      } else {
+        console.log("placedDomino est false");
       } /*  else if () {
         // Dernier tour
       } */

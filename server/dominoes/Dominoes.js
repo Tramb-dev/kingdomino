@@ -6,7 +6,9 @@ module.exports = class Dominoes {
   nextPickedDominoes = [];
   numberOfDisplayedDominoes = 4;
   numberOfDominoesInGame = 0;
+  // Compteur de pions placés sur le tour
   king = 0;
+  // Compteur de dominos placés sur le tour
   domino = 0;
 
   constructor() {}
@@ -48,7 +50,7 @@ module.exports = class Dominoes {
   }
 
   /**
-   * Passe les dominos du tour suivant en actif
+   * Passe les dominos du tour suivant en actif et en reprend de nouveaux pour le tour suivant
    */
   changeNextToCurrent() {
     this.currentDominoes = Array.from(this.nextDominoes);

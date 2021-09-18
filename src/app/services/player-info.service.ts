@@ -33,6 +33,7 @@ export class PlayerInfoService {
   private playersOrderSubcription: Subscription;
   private playerMessageSubscription: Subscription;
   private nextPickedDominoesSubscription: Subscription;
+  public nextPickedDominoes: boolean[] = [false, false, false, false];
   private moveDominoSubscription: Subscription;
   public playersOrder: Player[] = [];
   public kingsPosition: King[] = [];
@@ -69,6 +70,7 @@ export class PlayerInfoService {
     this.playersOrderSubcription = this.websocket.playersOrder$
       .pipe(
         tap((data: number[]) => {
+          this.nextPickedDominoes = [false, false, false, false];
           for (let i = 0; i < data.length; i++) {
             this.kingsPosition[i] = {
               left: '81.5px',
@@ -126,11 +128,14 @@ export class PlayerInfoService {
       this.websocket.nextPickedDominoes$.subscribe((data: any[]) => {
         for (let i = 0; i < data.length; i++) {
           if (data[i]) {
+            this.nextPickedDominoes[i] = true;
             this.kingsPosition[data[i].king] = {
               left: '368px',
               top: i * (100 + 6) + 30 + 'px',
               player: data[i].player,
             };
+          } else {
+            this.nextPickedDominoes[i] = false;
           }
         }
       });

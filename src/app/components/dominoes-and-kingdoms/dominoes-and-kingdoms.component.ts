@@ -16,8 +16,12 @@ export class DominoesAndKingdomsComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  chooseNextDomino(numero: number): void {
-    if (this.playerInfo.player.isTurn && this.playerInfo.player.canPlaceKing) {
+  chooseNextDomino(numero: number, index: number): void {
+    if (
+      this.playerInfo.player.isTurn &&
+      this.playerInfo.player.canPlaceKing &&
+      !this.playerInfo.nextPickedDominoes[index]
+    ) {
       this.playerInfo.sendChosenDomino(numero);
     }
   }
