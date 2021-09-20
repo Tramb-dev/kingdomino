@@ -125,6 +125,7 @@ module.exports = class Game extends Dominoes {
     if (grid) {
       // Si le joueur peut effectivement placer son domino
       this.playerHasPlacedDomino(data);
+      this.playersModule.currentPlayer.grid.getScore();
 
       if (this.currentDominoes.length > 0) {
         // Si tous les dominos n'ont pas encore été posés, on envoit les dominos restant aux joueurs
@@ -207,13 +208,13 @@ module.exports = class Game extends Dominoes {
    * @param {*} room
    */
   canYouPlaceADomino(io, socket, room) {
-    console.log(chalk.blue(this.currentDominoes[0]));
+    console.log(this.currentDominoes[0]);
     if (
       this.playersModule.currentPlayer.grid.isMovementPossible(
         this.getOneDomino(this.currentDominoes[0])
       )
     ) {
-      console.log(chalk.green("Le joueur peut poser son domino"));
+      console.log("Le joueur peut poser son domino");
       // Si un mouvement est possible
       socket.emit(
         "droppables",
@@ -225,7 +226,7 @@ module.exports = class Game extends Dominoes {
       this.playersModule.currentPlayer.canPlaceDomino = true;
       return true;
     } else {
-      console.log(chalk.red("Le joueur ne peut pas poser son domino"));
+      console.log("Le joueur ne peut pas poser son domino");
       io.to(room).emit(
         "logs",
         `${this.playersModule.currentPlayer.pseudo} ne peut pas poser son domino !`

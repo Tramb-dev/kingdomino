@@ -3,6 +3,7 @@ module.exports = class Grid {
   droppables = Array.from({ length: 5 }, (v, k) => {
     return (k = Array.from({ length: 5 }, (v, k) => (k = false)));
   });
+  score = 0;
 
   constructor() {
     for (let ligne = 0; ligne < 5; ligne++) {
@@ -50,7 +51,8 @@ module.exports = class Grid {
     });
 
     const testAdjacentCells = (row, col) => {
-      if (this.testOccupiedCell(row, col) === null) {
+      const gridCase = this.testOccupiedCell(row, col);
+      if (gridCase.contenu === null) {
         return true;
       }
       return false;
@@ -132,11 +134,11 @@ module.exports = class Grid {
    * Test si une cellule est bien dans le tableau et si elle contient quelque chose
    * @param {*} row la ligne du tableau
    * @param {*} col la colonne du tableau
-   * @returns le contenu/vrai si la cellule contient quelque chose
+   * @returns la cellule si elle contient quelque chose
    */
   testOccupiedCell(row, col) {
     if (row >= 0 && col >= 0 && row < 5 && col < 5) {
-      return this.grid[row][col].contenu;
+      return this.grid[row][col];
     }
     return false;
   }
@@ -153,7 +155,7 @@ module.exports = class Grid {
     // Retourne true si la case testée est le chateau ou si le contenu est le même que la case du domino adjacent
     const testCase = (ligne, colonne, contenu) => {
       const gridCase = this.testOccupiedCell(ligne, colonne);
-      if (gridCase === contenu || gridCase === "chateau") {
+      if (gridCase.contenu === contenu || gridCase.contenu === "chateau") {
         return true;
       }
       return false;
@@ -242,7 +244,8 @@ module.exports = class Grid {
    */
   isMovementPossible(domino) {
     const testAdjacentCells = (row, col) => {
-      if (this.testOccupiedCell(row, col) === null) {
+      const gridCase = this.testOccupiedCell(row, col);
+      if (gridCase.contenu === null) {
         return true;
       }
       return false;
@@ -282,5 +285,105 @@ module.exports = class Grid {
       }
     }
     return false;
+  }
+
+  getScore() {
+    const scoringObj = {
+      ble: [],
+      prairie: [],
+      marais: [],
+      mine: [],
+      foret: [],
+      eau: [],
+    };
+    this.score = 0;
+
+    for (let row = 0; row < 5; row++) {
+      for (let col = 0; col < 5; col++) {
+        const left = this.testOccupiedCell(row, col - 1);
+        const top = this.testOccupiedCell(row - 1, col);
+        const gridCase = this.grid[row][col];
+        const currentContent = gridCase.contenu;
+
+        if (currentContent !== null && currentContent !== "chateau") {
+          // Si c'est la première case de la grille à avoir ce contenu alors on inscrit directement la case dans le tableau
+          if (scoringObj[currentContent].length === 0) {
+            scoringObj[currentContent].push({
+              nbCouronnes: gridCase.nbCouronnes,
+              positions: [{ row: row, col: col }],
+            });
+          } else {
+            let leftIndex = -1;
+            let topIndex = -1;
+
+            // Si la case de gauche a le même contenu, on cherche son index dans le tableau, et on ajoute la case courante dans ce tableau et on additionne les couronnes
+            for (let i = 0; i < scoringObj[currentContent].length; i++) {
+              if (
+                leftIndex === -1 &&
+                left &&
+                left.contenu === currentContent &&
+                this.searchIndex(scoringObj[currentContent][i].positions, left)
+              ) {
+                leftIndex = i;
+              }
+              if (
+                topIndex === -1 &&
+                top &&
+                top.contenu === currentContent &&
+                this.searchIndex(scoringObj[currentContent][i].positions, top)
+              ) {
+                topIndex = i;
+              }
+            }
+
+            if (topIndex > -1 && leftIndex > -1 && topIndex !== leftIndex) {
+              // On regarde si les cases du dessus et à gauche ont le même contenu et dans des tableaux séparés, dans ce cas on fusionne les tableaux
+              scoringObj[currentContent][leftIndex].positions.concat(
+                scoringObj[currentContent][topIndex].positions
+              );
+              scoringObj[currentContent][leftIndex].nbCouronnes +=
+                scoringObj[currentContent][topIndex].nbCouronnes;
+              scoringObj[currentContent][topIndex] = [];
+              this.addToTab(scoringObj[currentContent][leftIndex], gridCase);
+            } else if (
+              // Si les cases ont le même contenu mais sont dans le même tableau, ou alors la case de gauche n'a pas le même contenu, on ajoute la case courante au tableau du haut
+              (topIndex > -1 && leftIndex > -1 && topIndex === leftIndex) ||
+              leftIndex === -1
+            ) {
+              this.addToTab(scoringObj[currentContent][topIndex], gridCase);
+            } else if (leftIndex > -1 && topIndex === -1) {
+              // Sinon on ajoute au tableau de la case de gauche
+              this.addToTab(scoringObj[currentContent][leftIndex], gridCase);
+            }
+          }
+        }
+      }
+    }
+
+    for (let content of scoringObj) {
+      content.forEach((group) => {
+        this.score += group.nbCouronnes;
+      });
+    }
+    console.log(scoringObj, this.score);
+    return this.score;
+  }
+
+  addToTab(tab, gridCase) {
+    tab.positions.push({
+      row: gridCase.position.ligne,
+      col: gridCase.position.colonne,
+    });
+    tab.nbCouronnes += gridCase.nbCouronnes;
+  }
+
+  searchIndex(scoringElements, cell) {
+    if (!cell) return false;
+
+    return scoringElements.some(
+      (element) =>
+        element.row === cell.position.ligne &&
+        element.col === cell.position.colonne
+    );
   }
 };
