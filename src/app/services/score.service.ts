@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators'
 import { Score } from '../interfaces/score';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ScoreService {
   public scoreSheet: Score[] = [];
 
-  constructor(private socket: Socket) { }
+  constructor(private websocket: WebsocketService) {}
 
-  getScore(): void {
-    this.socket.emit('getScore');
-  }
-  
-  onGetScore(): Observable<Score> {
-    return this.socket.fromEvent('getScore').pipe(
-      tap((results: any) => this.scoreSheet = results)
+  async getScore(): Promise<Score[]> {
+    this.websocket.sendScoreRequest();
+    return await this.websocket.getScore.then(
+      (results: Score[]) => (this.scoreSheet = results)
     );
   }
 }

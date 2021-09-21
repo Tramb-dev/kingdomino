@@ -125,7 +125,10 @@ module.exports = class Game extends Dominoes {
     if (grid) {
       // Si le joueur peut effectivement placer son domino
       this.playerHasPlacedDomino(data);
-      this.playersModule.currentPlayer.grid.getScore();
+      io.to(room).emit("currentScore", {
+        pseudo: this.playersModule.currentPlayer.pseudo,
+        score: this.playersModule.currentPlayer.grid.getScore(),
+      });
 
       if (this.currentDominoes.length > 0) {
         // Si tous les dominos n'ont pas encore été posés, on envoit les dominos restant aux joueurs

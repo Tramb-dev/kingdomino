@@ -5,11 +5,13 @@ import { Observable } from 'rxjs';
 import { Player } from 'src/app/interfaces/player';
 import { GridFromServer } from '../interfaces/interfaces';
 import { Messages } from '../interfaces/messages';
+import { CurrentScore, Score } from '../interfaces/score';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketService {
+  public getScore: Promise<Score[]> = this.socket.fromOneTimeEvent('getScore');
   // Observable recevant les mises à jour sur le joueur
   public player$: Observable<Player> = this.socket.fromEvent('myPlayer');
   // Observable recevant les mises à jour sur tous les joueurs
@@ -61,6 +63,9 @@ export class WebsocketService {
 
   public lastPick$: Observable<never> = this.socket.fromEvent('lastPick');
 
+  public currentScore$: Observable<CurrentScore> =
+    this.socket.fromEvent('currentScore');
+
   // Message reçu lorsqu'un joueur se deconnecte, provoquant la fin du jeu
   public lostConnection: Promise<string> =
     this.socket.fromOneTimeEvent('lostConnection');
@@ -68,6 +73,10 @@ export class WebsocketService {
   public logs$: Observable<string> = this.socket.fromEvent('logs');
 
   constructor(private socket: Socket) {}
+
+  sendScoreRequest(): void {
+    this.socket.emit('getScore');
+  }
 
   startGame(): void {
     this.socket.emit('startGame');

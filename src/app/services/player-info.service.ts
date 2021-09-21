@@ -11,6 +11,7 @@ import { Messages } from '../interfaces/messages';
 import { King } from '../interfaces/king';
 import { GridPosition } from '../interfaces/interfaces';
 import { Domino } from '../interfaces/interfaces';
+import { CurrentScore } from '../interfaces/score';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +40,7 @@ export class PlayerInfoService {
   public kingsPosition: King[] = [];
   private currentDominoesSubscription: Subscription;
   private lastTurnSubscription: Subscription;
+  private currentScoreSubscription: Subscription;
   public lastTurn = false;
   public castles: Castles = {
     pink: false,
@@ -161,6 +163,17 @@ export class PlayerInfoService {
             (i - 1 - diffBetweenKingsAndLastDominoes) * (100 + 6) + 30 + 'px';
         }
       });
+
+    this.currentScoreSubscription = this.websocket.currentScore$.subscribe(
+      (value: CurrentScore) => {
+        const index: number = this.players.findIndex(
+          (player) => player.pseudo === value.pseudo
+        );
+        if (index > -1) {
+          this.players[index].score = value.score;
+        }
+      }
+    );
   }
 
   /**
