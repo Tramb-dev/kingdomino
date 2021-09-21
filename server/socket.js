@@ -88,11 +88,7 @@ module.exports = (io) => {
     });
 
     socket.on("startGame", () => {
-      if (
-        // TODO: pour debogage
-        game.gameLaunched &&
-        socket.id === playersModule.currentPlayer.sid
-      ) {
+      if (game.gameLaunched && socket.id === playersModule.currentPlayer.sid) {
         io.to(rooms[0]).emit("nextDominoes", game.nextDominoes);
 
         io.to(rooms[0]).emit("playersOrder", game.firstTurnOrder);

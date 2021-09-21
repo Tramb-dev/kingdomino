@@ -204,33 +204,50 @@ module.exports = class Grid {
       [data.left, data.right] = [data.right, data.left];
     }
 
+    const addDominoOnGrid = (row, col, gridCase, orientation, number) => {
+      this.grid[row][col] = {
+        contenu: gridCase.contenu,
+        nbCouronnes: gridCase.couronnes,
+        orientation: orientation % 4,
+        dominoNumber: number,
+        position: {
+          ligne: row,
+          colonne: col,
+        },
+      };
+    };
+
     if (this.testOrthogonale(data)) {
       if (data.orientation % 2 === 0) {
-        this.grid[data.gridPosition.row][data.gridPosition.col] = {
-          contenu: data.left.contenu,
-          nbCouronnes: data.left.couronnes,
-          orientation: data.orientation % 4,
-          dominoNumber: data.numero,
-        };
-        this.grid[data.gridPosition.row][data.gridPosition.col + 1] = {
-          contenu: data.right.contenu,
-          nbCouronnes: data.right.couronnes,
-          orientation: data.orientation % 4,
-          dominoNumber: data.numero,
-        };
+        addDominoOnGrid(
+          data.gridPosition.row,
+          data.gridPosition.col,
+          data.left,
+          data.orientation,
+          data.numero
+        );
+        addDominoOnGrid(
+          data.gridPosition.row,
+          data.gridPosition.col + 1,
+          data.right,
+          data.orientation,
+          data.numero
+        );
       } else {
-        this.grid[data.gridPosition.row][data.gridPosition.col] = {
-          contenu: data.left.contenu,
-          nbCouronnes: data.left.couronnes,
-          orientation: data.orientation % 4,
-          dominoNumber: data.numero,
-        };
-        this.grid[data.gridPosition.row + 1][data.gridPosition.col] = {
-          contenu: data.right.contenu,
-          nbCouronnes: data.right.couronnes,
-          orientation: data.orientation % 4,
-          dominoNumber: data.numero,
-        };
+        addDominoOnGrid(
+          data.gridPosition.row,
+          data.gridPosition.col,
+          data.left,
+          data.orientation,
+          data.numero
+        );
+        addDominoOnGrid(
+          data.gridPosition.row + 1,
+          data.gridPosition.col,
+          data.right,
+          data.orientation,
+          data.numero
+        );
       }
       return this.grid;
     }
@@ -316,7 +333,7 @@ module.exports = class Grid {
             let leftIndex = -1;
             let topIndex = -1;
 
-            // Si la case de gauche a le même contenu, on cherche son index dans le tableau, et on ajoute la case courante dans ce tableau et on additionne les couronnes
+            // Si la case de gauche/haut a le même contenu, on cherche son index dans le tableau
             for (let i = 0; i < scoringObj[currentContent].length; i++) {
               if (
                 leftIndex === -1 &&
@@ -347,8 +364,8 @@ module.exports = class Grid {
               this.addToTab(scoringObj[currentContent][leftIndex], gridCase);
             } else if (
               // Si les cases ont le même contenu mais sont dans le même tableau, ou alors la case de gauche n'a pas le même contenu, on ajoute la case courante au tableau du haut
-              (topIndex > -1 && leftIndex > -1 && topIndex === leftIndex) ||
-              leftIndex === -1
+              topIndex > -1 &&
+              ((leftIndex > -1 && topIndex === leftIndex) || leftIndex === -1)
             ) {
               this.addToTab(scoringObj[currentContent][topIndex], gridCase);
             } else if (leftIndex > -1 && topIndex === -1) {
@@ -360,12 +377,11 @@ module.exports = class Grid {
       }
     }
 
-    for (let content of scoringObj) {
-      content.forEach((group) => {
-        this.score += group.nbCouronnes;
+    for (let content in scoringObj) {
+      scoringObj[content].forEach((group) => {
+        this.score += group.nbCouronnes * group.positions.length;
       });
     }
-    console.log(scoringObj, this.score);
     return this.score;
   }
 
