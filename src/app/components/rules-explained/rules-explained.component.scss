@@ -1,0 +1,25 @@
+@import "../../../scss/variables";
+
+article {
+  margin: 10px;
+}
+
+section {
+  padding-bottom: 5px;
+  border-radius: 5px;
+  box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+  color: $blue;
+  background-color: lightcyan;
+  padding: 10px 5px;
+  text-transform: uppercase;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+p {
+  padding: 0 10px;
+  margin-bottom: 5px;
+}

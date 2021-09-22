@@ -1,1 +1,51 @@
-<p>rules-explained works!</p>
+<article>
+    <h1>Règles du jeu</h1>
+    <div class="rules">
+        <section>
+            <h3>Introduction</h3>
+            <p>Vous incarnez un Seigneur en quête de terres pour étendre son Royaume. Champs de blé, lacs, montagnes... il vous faut tout explorer pour repérer les meilleures parcelles. Mais d’autres Seigneurs convoitent les mêmes terres que vous... </p>
+        </section>
+        <section>
+            <h3>But du jeu</h3>
+            <p>Connectez astucieusement vos dominos pour construire le royaume de 5x5 cases le plus prestigieux.</p>
+        </section>
+        <section>
+            <h3>Tour de jeu</h3>
+            <p>L’ordre du tour de jeu est déterminé par la position des rois sur la ligne de dominos. Le joueur dont le roi est placé sur le 1er domino de la ligne (le plus haut) commence.</p>
+            <p>Il doit effectuer les actions suivantes :</p>
+            <ol>
+                <li>Sélectionner un nouveau domino dans la nouvelle ligne en venant placer son roi dessus.</li>
+                <li>Ajouter le domino sélectionné dans son royaume en respectant les règles de connexion.</li>
+            </ol>
+            <p>Puis c’est au joueur placé sur le second domino de faire ses deux actions, et ainsi de suite jusqu’à terminer par le joueur placé sur le dernier domino.</p>
+        </section>
+        <section>
+            <h3>Règles de connexion</h3>
+            <p>Les joueurs doivent construire un royaume de 5x5 cases (un domino est constitué de 2 cases).</p>
+            <p>Pour pouvoir poser son domino, le joueur doit :</p>
+            <ul>
+                <li>soit le connecter à sa tuile de départ (le domino de départ peut être considéré comme un joker, n’importe quel paysage peut être collé à ce domino),</li>
+                <li>soit le connecter à un autre domino en faisant correspondre au minimum 1 paysage (horizontalement ou verticalement uniquement).</li>
+            </ul>
+            <p>Dans le cas où il est impossible de venir ajouter un domino à son royaume en respectant les règles ci-dessus, le domino est défaussé et ne vous rapportera aucun point.</p>
+            <p>Tous vos dominos doivent tenir dans un espace de 5x5 cases. En cas de mauvaise anticipation, un à plusieurs dominos pourraient ne plus être exploitables et seront défaussés. Ils ne vous rapporteront alors aucun point.</p>
+        </section>
+        <section>
+            <h3>Calcul des points</h3>
+            <p>Chaque joueur calcule les points de prestige de son royaume de la façon suivante :</p>
+            <ul>
+                <li>Un royaume est constitué de différents DOMAINES (groupe de cases connectées horizontalement ou verticalement du même type de paysage).</li>
+                <li>Chaque domaine rapporte autant de points de prestige que son NOMBRE DE CASES multiplié par le NOMBRE DE COURONNES présentes sur le domaine.</li>
+                <li>Il peut y avoir plusieurs domaines du même type de paysage dans un même royaume.</li>
+                <li>
+                    Un domaine sans couronne ne rapporte rien.
+                    Chaque joueur additionne les points rapportés par chacun de ses domaines, le résultat de cette addition lui donne son score final.
+                </li>
+                <li>Le joueur qui a le plus haut score gagne la partie.</li>
+                <li>En cas d’égalité, le joueur qui a construit le domaine le plus étendu (peu importe que ce domaine possède des couronnes ou pas), remporte la partie.</li>
+                <li>En cas de nouvelle égalité, celui qui a le plus de couronnes remporte la partie.</li>
+                <li>Si les joueurs n’arrivent toujours pas à se départager, ils remportent tous la victoire.</li>
+            </ul>
+        </section>
+    </div>
+</article>
