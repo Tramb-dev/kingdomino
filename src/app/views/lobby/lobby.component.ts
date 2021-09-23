@@ -28,9 +28,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
    * Envoi le message de début de partie à la récéption du signal du serveur
    */
   ngOnInit(): void {
-    this.websocket.startGameMessage.then(() => {
+    this.websocket.startGameMessage$.subscribe(() => {
       this.displayCounter = true;
       this.playerInfo.player.canAccessToGame = true;
+      this.websocket.startGame();
       const interval = setInterval(() => {
         this.secondes--;
         if (this.secondes === 0) {
@@ -39,6 +40,18 @@ export class LobbyComponent implements OnInit, OnDestroy {
         }
       }, 1000);
     });
+    /* this.websocket.startGameMessage.then(() => {
+      this.displayCounter = true;
+      this.playerInfo.player.canAccessToGame = true;
+      this.websocket.startGame();
+      const interval = setInterval(() => {
+        this.secondes--;
+        if (this.secondes === 0) {
+          clearInterval(interval);
+          this.router.navigate(['/', 'game']);
+        }
+      }, 1000);
+    }); */
   }
 
   ngOnDestroy(): void {}

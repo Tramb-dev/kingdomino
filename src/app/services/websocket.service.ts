@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { Player } from 'src/app/interfaces/player';
 import { GridFromServer } from '../interfaces/interfaces';
@@ -19,8 +20,9 @@ export class WebsocketService {
     this.socket.fromEvent('allPlayers');
 
   // Message du serveur lorsque tous les joueurs sont prêts, on lance le jeu
-  public startGameMessage: Promise<string> =
-    this.socket.fromOneTimeEvent('startGame');
+  public startGameMessage$: Observable<string> = this.socket
+    .fromEvent<string>('startGame')
+    .pipe(take(1));
 
   // Observable recevant les dominos sur lesquels on peut jouer
   public currentDominoes$: Observable<number[]> =
@@ -45,8 +47,8 @@ export class WebsocketService {
   public moveDomino$: Observable<string> = this.socket.fromEvent('moveDomino');
 
   // Le serveur a calculé que le domino ne peut être placé
-  public cannotPlaceDomino$: Observable<number> =
-    this.socket.fromEvent('cannotPlaceDomino');
+  /* public cannotPlaceDomino$: Observable<number> =
+    this.socket.fromEvent('cannotPlaceDomino'); */
 
   // Reçoit la grille du joueur avec les dominos dessus
   public myGrid$: Observable<GridFromServer[]> =

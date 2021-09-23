@@ -23,7 +23,7 @@ export class GameViewComponent {
   }
 
   ngOnInit(): void {
-    this.websocket.startGame();
+    //this.websocket.startGame();
     /* this.dominoService.getAllDominoes().subscribe(); */
   }
 

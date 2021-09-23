@@ -9,7 +9,7 @@ import {
   PlacedDomino,
   GridFromServer,
 } from '../interfaces/interfaces';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -851,7 +851,7 @@ export class DominoesService {
   private myGridSubscription: Subscription;
   private myDroppablesSubscription: Subscription;
 
-  private cannotPlaceDominoSubscription: Subscription;
+  //private cannotPlaceDominoSubscription: Subscription;
 
   constructor(private websocket: WebsocketService) {
     this.currentDominoesSubscription = this.websocket.currentDominoes$
@@ -893,12 +893,13 @@ export class DominoesService {
       }
     );
 
-    this.cannotPlaceDominoSubscription =
+    /* this.cannotPlaceDominoSubscription =
       this.websocket.cannotPlaceDomino$.subscribe((value: number) => {
+        console.log('cannotPlaceDomino', value);
         if (this.currentDominoes[0].numero === value) {
           this.currentDominoes.shift;
         }
-      });
+      }); */
   }
 
   createGrille(): void {

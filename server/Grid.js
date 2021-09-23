@@ -43,12 +43,13 @@ module.exports = class Grid {
 
   /**
    * Réalise une grille définissant où les dominos peuvent se poser
-   * @returns la grille de booléens
+   * @returns un booléen si un movement est possible ou non
    */
-  sendDroppables(domino) {
+  createDroppables(domino) {
     this.droppables = Array.from({ length: 5 }, (v, k) => {
       return (k = Array.from({ length: 5 }, (v, k) => (k = false)));
     });
+    let isMovementPossible = false;
 
     const testAdjacentCells = (row, col) => {
       const gridCase = this.testOccupiedCell(row, col);
@@ -72,62 +73,74 @@ module.exports = class Grid {
             if (testAdjacentCells(row - 2, col)) {
               this.droppables[row - 2][col] = true;
               this.droppables[row - 1][col] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row - 1, col - 1)) {
               this.droppables[row - 1][col - 1] = true;
               this.droppables[row - 1][col] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row - 1, col + 1)) {
               this.droppables[row - 1][col + 1] = true;
               this.droppables[row - 1][col] = true;
+              isMovementPossible = true;
             }
           }
           if (testAdjacentCells(row + 1, col)) {
             if (testAdjacentCells(row + 2, col)) {
               this.droppables[row + 2][col] = true;
               this.droppables[row + 1][col] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row + 1, col - 1)) {
               this.droppables[row + 1][col - 1] = true;
               this.droppables[row + 1][col] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row + 1, col + 1)) {
               this.droppables[row + 1][col + 1] = true;
               this.droppables[row + 1][col] = true;
+              isMovementPossible = true;
             }
           }
           if (testAdjacentCells(row, col - 1)) {
             if (testAdjacentCells(row, col - 2)) {
               this.droppables[row][col - 2] = true;
               this.droppables[row][col - 1] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row - 1, col - 1)) {
               this.droppables[row - 1][col - 1] = true;
               this.droppables[row][col - 1] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row + 1, col - 1)) {
               this.droppables[row + 1][col - 1] = true;
               this.droppables[row][col - 1] = true;
+              isMovementPossible = true;
             }
           }
           if (testAdjacentCells(row, col + 1)) {
             if (testAdjacentCells(row, col + 2)) {
               this.droppables[row][col + 2] = true;
               this.droppables[row][col + 1] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row - 1, col + 1)) {
               this.droppables[row - 1][col + 1] = true;
               this.droppables[row][col + 1] = true;
+              isMovementPossible = true;
             }
             if (testAdjacentCells(row + 1, col + 1)) {
               this.droppables[row + 1][col + 1] = true;
               this.droppables[row][col + 1] = true;
+              isMovementPossible = true;
             }
           }
         }
       }
     }
-    return this.droppables;
+    return isMovementPossible;
   }
 
   /**
@@ -258,7 +271,7 @@ module.exports = class Grid {
    * Test si le joueur peut poser un domino (s'il reste de la place et qu'il a le droit de le poser).
    * @param {*} domino
    * @returns
-   */
+   */ /* 
   isMovementPossible(domino) {
     const testAdjacentCells = (row, col) => {
       const gridCase = this.testOccupiedCell(row, col);
@@ -302,10 +315,10 @@ module.exports = class Grid {
       }
     }
     return false;
-  }
+  } */
 
   getScore() {
-    const scoringObj = {
+    const plots = {
       ble: [],
       prairie: [],
       marais: [],
@@ -317,15 +330,22 @@ module.exports = class Grid {
 
     for (let row = 0; row < 5; row++) {
       for (let col = 0; col < 5; col++) {
-        const left = this.testOccupiedCell(row, col - 1);
-        const top = this.testOccupiedCell(row - 1, col);
+        // Regarde les cellules de gauche et du haut, si elles ont du contenu on passe la cellule, false sinon
+        let left = this.testOccupiedCell(row, col - 1);
+        if (left.contenu === null || left.contenu === "chateau") {
+          left = false;
+        }
+        let top = this.testOccupiedCell(row - 1, col);
+        if (top.contenu === null || top.contenu === "chateau") {
+          top = false;
+        }
         const gridCase = this.grid[row][col];
         const currentContent = gridCase.contenu;
 
         if (currentContent !== null && currentContent !== "chateau") {
           // Si c'est la première case de la grille à avoir ce contenu alors on inscrit directement la case dans le tableau
-          if (scoringObj[currentContent].length === 0) {
-            scoringObj[currentContent].push({
+          if (plots[currentContent].length === 0) {
+            plots[currentContent].push({
               nbCouronnes: gridCase.nbCouronnes,
               positions: [{ row: row, col: col }],
             });
@@ -334,12 +354,12 @@ module.exports = class Grid {
             let topIndex = -1;
 
             // Si la case de gauche/haut a le même contenu, on cherche son index dans le tableau
-            for (let i = 0; i < scoringObj[currentContent].length; i++) {
+            for (let i = 0; i < plots[currentContent].length; i++) {
               if (
                 leftIndex === -1 &&
                 left &&
                 left.contenu === currentContent &&
-                this.searchIndex(scoringObj[currentContent][i].positions, left)
+                this.searchIndex(plots[currentContent][i].positions, left)
               ) {
                 leftIndex = i;
               }
@@ -347,38 +367,86 @@ module.exports = class Grid {
                 topIndex === -1 &&
                 top &&
                 top.contenu === currentContent &&
-                this.searchIndex(scoringObj[currentContent][i].positions, top)
+                this.searchIndex(plots[currentContent][i].positions, top)
               ) {
                 topIndex = i;
               }
             }
 
+            console.log("left", left);
+            console.log("current", gridCase);
+            console.log("top", top);
+
             if (topIndex > -1 && leftIndex > -1 && topIndex !== leftIndex) {
-              // On regarde si les cases du dessus et à gauche ont le même contenu et dans des tableaux séparés, dans ce cas on fusionne les tableaux
-              scoringObj[currentContent][leftIndex].positions.concat(
-                scoringObj[currentContent][topIndex].positions
+              console.log(
+                "2 cellules dans 2 tableaux",
+                "topindex",
+                topIndex,
+                "leftindex",
+                leftIndex
               );
-              scoringObj[currentContent][leftIndex].nbCouronnes +=
-                scoringObj[currentContent][topIndex].nbCouronnes;
-              scoringObj[currentContent][topIndex] = [];
-              this.addToTab(scoringObj[currentContent][leftIndex], gridCase);
+              // On regarde si les cases du dessus et à gauche ont le même contenu et dans des tableaux séparés, dans ce cas on fusionne les tableaux
+              plots[currentContent][leftIndex].positions.concat(
+                plots[currentContent][topIndex].positions
+              );
+              plots[currentContent][leftIndex].nbCouronnes +=
+                plots[currentContent][topIndex].nbCouronnes;
+              plots[currentContent].splice(topIndex, 1);
+              this.addToTab(plots[currentContent][leftIndex], gridCase);
             } else if (
-              // Si les cases ont le même contenu mais sont dans le même tableau, ou alors la case de gauche n'a pas le même contenu, on ajoute la case courante au tableau du haut
+              // Si les cases ont le même contenu mais sont dans le même tableau, on ajoute la case courante au tableau du haut
               topIndex > -1 &&
-              ((leftIndex > -1 && topIndex === leftIndex) || leftIndex === -1)
+              leftIndex > -1 &&
+              topIndex === leftIndex
             ) {
-              this.addToTab(scoringObj[currentContent][topIndex], gridCase);
+              console.log(
+                "2 cases dans le même tableau",
+                "topIndex",
+                topIndex,
+                "leftIndex",
+                leftIndex
+              );
+              this.addToTab(plots[currentContent][topIndex], gridCase);
+            } else if (topIndex > -1 && leftIndex === -1) {
+              // Si la case de gauche n'a pas le même contenu, mais celle du haut si, on ajoute avec celle du haut
+              console.log(
+                "top ==, left #",
+                "topIndex",
+                topIndex,
+                "leftIndex",
+                leftIndex
+              );
+              this.addToTab(plots[currentContent][topIndex], gridCase);
             } else if (leftIndex > -1 && topIndex === -1) {
-              // Sinon on ajoute au tableau de la case de gauche
-              this.addToTab(scoringObj[currentContent][leftIndex], gridCase);
+              // Si la case du haut n'a pas le même contenu, mais celle de gauche si, on ajoute avec celle de gauche
+              console.log(
+                "left ==, top #",
+                "topIndex",
+                topIndex,
+                "leftIndex",
+                leftIndex
+              );
+              this.addToTab(plots[currentContent][leftIndex], gridCase);
+            } else {
+              // Sinon, c'est une nouvelle parcelle, on crée un nouveau tableau
+              plots[currentContent].push({
+                nbCouronnes: gridCase.nbCouronnes,
+                positions: [
+                  {
+                    row: gridCase.position.ligne,
+                    col: gridCase.position.colonne,
+                  },
+                ],
+              });
             }
           }
+          console.log("-----------------------------------");
         }
       }
     }
 
-    for (let content in scoringObj) {
-      scoringObj[content].forEach((group) => {
+    for (let content in plots) {
+      plots[content].forEach((group) => {
         this.score += group.nbCouronnes * group.positions.length;
       });
     }

@@ -89,19 +89,21 @@ module.exports = (io) => {
 
     socket.on("startGame", () => {
       if (game.gameLaunched && socket.id === playersModule.currentPlayer.sid) {
-        io.to(rooms[0]).emit("nextDominoes", game.nextDominoes);
+        setTimeout(() => {
+          io.to(rooms[0]).emit("nextDominoes", game.nextDominoes);
 
-        io.to(rooms[0]).emit("playersOrder", game.firstTurnOrder);
+          io.to(rooms[0]).emit("playersOrder", game.firstTurnOrder);
 
-        socket.to(rooms[0]).emit("message", {
-          type: "turnOf",
-          data: playersModule.currentPlayer.pseudo,
-        });
+          socket.to(rooms[0]).emit("message", {
+            type: "turnOf",
+            data: playersModule.currentPlayer.pseudo,
+          });
 
-        socket.emit("message", {
-          type: "yourTurn",
-          data: playersModule.currentPlayer.pseudo,
-        });
+          socket.emit("message", {
+            type: "yourTurn",
+            data: playersModule.currentPlayer.pseudo,
+          });
+        }, 1200);
       }
     });
 
@@ -129,7 +131,7 @@ module.exports = (io) => {
       ) {
         game.nTurnDomino(io, socket, rooms[0], data);
       } else {
-        console.log("placedDomino est false");
+        console.log("placedDomino is false");
       } /*  else if () {
         // Dernier tour
       } */
