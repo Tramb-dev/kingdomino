@@ -386,13 +386,14 @@ module.exports = class Grid {
                 leftIndex
               );
               // On regarde si les cases du dessus et à gauche ont le même contenu et dans des tableaux séparés, dans ce cas on fusionne les tableaux
-              plots[currentContent][leftIndex].positions.concat(
-                plots[currentContent][topIndex].positions
+              plots[currentContent][topIndex].positions.concat(
+                plots[currentContent][leftIndex].positions
               );
-              plots[currentContent][leftIndex].nbCouronnes +=
-                plots[currentContent][topIndex].nbCouronnes;
-              plots[currentContent].splice(topIndex, 1);
-              this.addToTab(plots[currentContent][leftIndex], gridCase);
+              plots[currentContent][topIndex].nbCouronnes +=
+                plots[currentContent][leftIndex].nbCouronnes;
+              plots[currentContent].splice(leftIndex, 1);
+              console.log("currentContent après fusion", plots[currentContent]);
+              this.addToTab(plots[currentContent][topIndex], gridCase);
             } else if (
               // Si les cases ont le même contenu mais sont dans le même tableau, on ajoute la case courante au tableau du haut
               topIndex > -1 &&

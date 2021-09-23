@@ -33,7 +33,7 @@ module.exports = (io) => {
     // et le modifie si nécessaire avant de renvoyer la liste des joueurs
     // TODO: vérifier si le joueur n'existe pas déjà en mémoire avec son socket.id pour éviter les soucis de navigation
     socket.on("newPlayer", (pseudo) => {
-      if (!game.gameLaunched) {
+      if (game.gameState === "waiting") {
         pseudo = playersModule.testPseudo(pseudo);
         const newPlayer = {
           pseudo: pseudo,
@@ -88,7 +88,11 @@ module.exports = (io) => {
     });
 
     socket.on("startGame", () => {
-      if (game.gameLaunched && socket.id === playersModule.currentPlayer.sid) {
+      if (
+        game.gameState === "launching" &&
+        socket.id === playersModule.currentPlayer.sid
+      ) {
+        game.gameState = "launched";
         setTimeout(() => {
           io.to(rooms[0]).emit("nextDominoes", game.nextDominoes);
 
@@ -149,7 +153,7 @@ module.exports = (io) => {
           playersModule.room.indexOf(playerToDelete),
           1
         );
-        if (game.gameLaunched) {
+        if (game.gameState === "launched" || game.gameState === "launching") {
           socket.broadcast.emit("lostConnection", playerToDelete.pseudo);
           playersModule = new Players();
           game = new Game(playersModule);

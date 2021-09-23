@@ -1,8 +1,7 @@
 const Dominoes = require("./dominoes/Dominoes");
 
 module.exports = class Game extends Dominoes {
-  gameLaunched = false;
-  gameFinished = false;
+  gameState = "waiting";
   turn = 0;
   numberOfPlayers = 0;
   lastPick = false;
@@ -15,7 +14,7 @@ module.exports = class Game extends Dominoes {
   }
 
   init() {
-    this.gameLaunched = true;
+    this.gameState = "launching";
     this.numberOfPlayers = this.playersModule.room.length;
     this.initDominoes(this.numberOfPlayers);
     this.playersModule.sortPlayers();
