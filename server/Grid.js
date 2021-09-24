@@ -267,56 +267,6 @@ module.exports = class Grid {
     return false;
   }
 
-  /**
-   * Test si le joueur peut poser un domino (s'il reste de la place et qu'il a le droit de le poser).
-   * @param {*} domino
-   * @returns
-   */ /* 
-  isMovementPossible(domino) {
-    const testAdjacentCells = (row, col) => {
-      const gridCase = this.testOccupiedCell(row, col);
-      if (gridCase.contenu === null) {
-        return true;
-      }
-      return false;
-    };
-
-    const leftContent = domino.left.contenu;
-    const rightContent = domino.right.contenu;
-
-    for (let row = 0; row < 5; row++) {
-      for (let col = 0; col < 5; col++) {
-        if (
-          this.grid[row][col].contenu === "chateau" ||
-          this.grid[row][col].contenu === leftContent ||
-          this.grid[row][col].contenu === rightContent
-        ) {
-          if (
-            (testAdjacentCells(row - 1, col) &&
-              (testAdjacentCells(row - 2, col) ||
-                testAdjacentCells(row - 1, col - 1) ||
-                testAdjacentCells(row - 1, col + 1))) ||
-            (testAdjacentCells(row + 1, col) &&
-              (testAdjacentCells(row + 2, col) ||
-                testAdjacentCells(row + 1, col - 1) ||
-                testAdjacentCells(row + 1, col + 1))) ||
-            (testAdjacentCells(row, col - 1) &&
-              (testAdjacentCells(row, col - 2) ||
-                testAdjacentCells(row - 1, col - 1) ||
-                testAdjacentCells(row + 1, col - 1))) ||
-            (testAdjacentCells(row, col + 1) &&
-              (testAdjacentCells(row, col + 2) ||
-                testAdjacentCells(row - 1, col + 1) ||
-                testAdjacentCells(row + 1, col + 1)))
-          ) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
-  } */
-
   getScore() {
     const plots = {
       ble: [],
@@ -373,18 +323,7 @@ module.exports = class Grid {
               }
             }
 
-            console.log("left", left);
-            console.log("current", gridCase);
-            console.log("top", top);
-
             if (topIndex > -1 && leftIndex > -1 && topIndex !== leftIndex) {
-              console.log(
-                "2 cellules dans 2 tableaux",
-                "topindex",
-                topIndex,
-                "leftindex",
-                leftIndex
-              );
               // On regarde si les cases du dessus et à gauche ont le même contenu et dans des tableaux séparés, dans ce cas on fusionne les tableaux
               plots[currentContent][topIndex].positions.concat(
                 plots[currentContent][leftIndex].positions
@@ -392,7 +331,6 @@ module.exports = class Grid {
               plots[currentContent][topIndex].nbCouronnes +=
                 plots[currentContent][leftIndex].nbCouronnes;
               plots[currentContent].splice(leftIndex, 1);
-              console.log("currentContent après fusion", plots[currentContent]);
               this.addToTab(plots[currentContent][topIndex], gridCase);
             } else if (
               // Si les cases ont le même contenu mais sont dans le même tableau, on ajoute la case courante au tableau du haut
@@ -400,33 +338,12 @@ module.exports = class Grid {
               leftIndex > -1 &&
               topIndex === leftIndex
             ) {
-              console.log(
-                "2 cases dans le même tableau",
-                "topIndex",
-                topIndex,
-                "leftIndex",
-                leftIndex
-              );
               this.addToTab(plots[currentContent][topIndex], gridCase);
             } else if (topIndex > -1 && leftIndex === -1) {
               // Si la case de gauche n'a pas le même contenu, mais celle du haut si, on ajoute avec celle du haut
-              console.log(
-                "top ==, left #",
-                "topIndex",
-                topIndex,
-                "leftIndex",
-                leftIndex
-              );
               this.addToTab(plots[currentContent][topIndex], gridCase);
             } else if (leftIndex > -1 && topIndex === -1) {
               // Si la case du haut n'a pas le même contenu, mais celle de gauche si, on ajoute avec celle de gauche
-              console.log(
-                "left ==, top #",
-                "topIndex",
-                topIndex,
-                "leftIndex",
-                leftIndex
-              );
               this.addToTab(plots[currentContent][leftIndex], gridCase);
             } else {
               // Sinon, c'est une nouvelle parcelle, on crée un nouveau tableau
@@ -441,7 +358,6 @@ module.exports = class Grid {
               });
             }
           }
-          console.log("-----------------------------------");
         }
       }
     }

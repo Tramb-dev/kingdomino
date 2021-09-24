@@ -105,7 +105,7 @@ module.exports = class Game extends Dominoes {
   nTurnKing(io, socket, room, numero) {
     this.playerHasPickedDomino(numero, this.playersModule.currentPlayer);
     io.to(room).emit("nextPickedDominoes", this.nextPickedDominoes);
-    if (!this.canYouPlaceADomino(io, socket, room)) {
+    if (!this.canYouPlaceADomino(io, socket.id, room)) {
       this.whosNext(io, room, this.playersModule.currentPlayer);
     }
     this.playersModule.currentPlayer.canPlaceKing = false;
@@ -147,7 +147,10 @@ module.exports = class Game extends Dominoes {
 
       this.playersModule.currentPlayer.canPlaceDomino = false;
 
-      if (this.domino === this.numberOfDisplayedDominoes) {
+      if (
+        this.domino === this.numberOfDisplayedDominoes &&
+        this.gameState !== "ended"
+      ) {
         // Les dominos sont tous placés à la fin du jeu, on lance la clôture du jeu
         if (this.lastTurn) {
           this.endOfGame();
@@ -155,10 +158,7 @@ module.exports = class Game extends Dominoes {
           // Les dominos sont tous placés, on passe au tour suivant
           this.newTurn();
           io.to(room).emit("logs", `${this.turn}ème tour.`);
-          if (this.lastTurn) {
-            // Si c'est le dernier tour
-            this.lastTurnDomino(io, socket, room);
-          } else {
+          if (!this.lastTurn) {
             if (this.lastPick) {
               io.to(room).emit("lastPick");
             }
@@ -166,11 +166,16 @@ module.exports = class Game extends Dominoes {
           }
         }
         io.to(room).emit("playersOrder", this.playersModule.playerOrder);
+        if (this.lastTurn) {
+          this.lastTurnDomino(io, room);
+        }
       } else if (this.lastTurn) {
-        this.canPlayersDropDominoes(io, socket, room);
+        this.canPlayersDropDominoes(io, room);
       }
-      const nextPlayer = this.nextPlayer();
-      this.whosNext(io, room, nextPlayer);
+      if (!this.lastTurn) {
+        const nextPlayer = this.nextPlayer();
+        this.whosNext(io, room, nextPlayer);
+      }
     } else {
       socket.emit("message", {
         type: "placedDomino",
@@ -186,10 +191,11 @@ module.exports = class Game extends Dominoes {
    * @param {*} room
    * @param {*} data
    */
-  lastTurnDomino(io, socket, room) {
+  lastTurnDomino(io, room) {
     io.to(room).emit("lastTurn");
+    console.log("c'est le dernier tour");
     [this.currentDominoes, this.nextDominoes] = [this.nextDominoes, []];
-    this.canPlayersDropDominoes(io, socket, room);
+    this.canPlayersDropDominoes(io, room);
   }
 
   /**
@@ -198,50 +204,60 @@ module.exports = class Game extends Dominoes {
    * @param {*} socket
    * @param {*} room
    */
-  canPlayersDropDominoes(io, socket, room) {
-    while (
+  canPlayersDropDominoes(io, room) {
+    this.nextPlayer();
+    console.log("test si le joueur peut poser son domino");
+    /* while (
       this.domino < this.numberOfDisplayedDominoes &&
-      !this.canYouPlaceADomino(io, socket, room)
+      !this.canYouPlaceADomino(io, this.playersModule.currentPlayer.sid, room)
     ) {
-      console.log("domino", this.domino);
       this.domino++;
-    }
+      this.whosNext(io, room, this.playersModule.currentPlayer);
+      cpt++;
+    } */
+
+    let validator = false;
+    do {
+      validator = this.canYouPlaceADomino(
+        io,
+        this.playersModule.currentPlayer.sid,
+        room
+      );
+      this.whosNext(io, room, this.playersModule.currentPlayer);
+      if (validator) {
+        io.to(room).emit("currentDominoes", this.currentDominoes);
+      }
+      this.domino++;
+    } while (this.domino < this.numberOfDisplayedDominoes && !validator);
 
     if (this.domino > 3) {
       this.endOfGame();
-    } else {
-      console.log(this.playersModule.currentPlayer);
-      this.whosNext(io, room, this.playersModule.currentPlayer);
     }
   }
 
   /**
    * Détermine si le joueur peut placer son domino, le fait défausser sinon
    * @param {*} io
-   * @param {*} socket
+   * @param {*} sid, identifiant socket socket.id
    * @param {*} room
    * @returns boolean
    */
-  canYouPlaceADomino(io, socket, room) {
-    console.log(this.currentDominoes[0]);
+  canYouPlaceADomino(io, sid, room) {
     if (
       this.playersModule.currentPlayer.grid.createDroppables(
         this.getOneDomino(this.currentDominoes[0])
       )
     ) {
+      console.log("emission des droppables");
       // Si un mouvement est possible
-      socket.emit(
+      io.to(sid).emit(
         "droppables",
         this.playersModule.currentPlayer.grid.droppables
       );
-      socket.emit("moveDomino", this.playersModule.currentPlayer.uid);
+      io.to(sid).emit("moveDomino", this.playersModule.currentPlayer.uid);
       this.playersModule.currentPlayer.canPlaceDomino = true;
       return true;
     } else {
-      console.log(
-        "Le joueur ne peut pas poser son domino",
-        this.currentDominoes[0]
-      );
       io.to(room).emit(
         "logs",
         `${this.playersModule.currentPlayer.pseudo} ne peut pas poser son domino !`
@@ -273,5 +289,8 @@ module.exports = class Game extends Dominoes {
   /**
    * Close the game
    */
-  endOfGame() {}
+  endOfGame() {
+    console.log("c'est la fin !");
+    this.gameState = "ended";
+  }
 };
