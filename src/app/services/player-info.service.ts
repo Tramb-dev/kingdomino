@@ -41,6 +41,7 @@ export class PlayerInfoService {
   private currentDominoesSubscription: Subscription;
   private lastTurnSubscription: Subscription;
   private currentScoreSubscription: Subscription;
+  private endOfGameSubscription: Subscription;
   public lastTurn = false;
   public castles: Castles = {
     pink: false,
@@ -174,6 +175,19 @@ export class PlayerInfoService {
         }
       }
     );
+
+    this.endOfGameSubscription = this.websocket.endOfGame$.subscribe(() => {
+      this.myPlayerSubscription.unsubscribe();
+      this.allPlayersSubscription.unsubscribe();
+      this.playersOrderSubcription.unsubscribe();
+      this.lastTurnSubscription.unsubscribe();
+      this.playerMessageSubscription.unsubscribe();
+      this.nextPickedDominoesSubscription.unsubscribe();
+      this.moveDominoSubscription.unsubscribe();
+      this.currentDominoesSubscription.unsubscribe();
+      this.currentScoreSubscription.unsubscribe();
+      this.endOfGameSubscription.unsubscribe();
+    });
   }
 
   /**

@@ -22,6 +22,7 @@ import { ScoreComponent } from './components/score/score.component';
 import { GameViewComponent } from './views/game-view/game-view.component';
 import { HomeComponent } from './views/home/home.component';
 import { LobbyComponent } from './views/lobby/lobby.component';
+import { FinalScoreComponent } from './components/final-score/final-score.component';
 
 const config: SocketIoConfig = {
   url: environment.socketUrl,
@@ -46,7 +47,8 @@ const config: SocketIoConfig = {
     ScoreComponent,
     GameViewComponent,
     HomeComponent,
-    LobbyComponent
+    LobbyComponent,
+    FinalScoreComponent
   ],
   imports: [
     BrowserModule,

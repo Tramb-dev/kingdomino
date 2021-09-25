@@ -153,7 +153,7 @@ module.exports = class Game extends Dominoes {
       ) {
         // Les dominos sont tous placés à la fin du jeu, on lance la clôture du jeu
         if (this.lastTurn) {
-          this.endOfGame();
+          this.endOfGame(io, room);
         } else {
           // Les dominos sont tous placés, on passe au tour suivant
           this.newTurn();
@@ -231,7 +231,7 @@ module.exports = class Game extends Dominoes {
     } while (this.domino < this.numberOfDisplayedDominoes && !validator);
 
     if (this.domino > 3) {
-      this.endOfGame();
+      this.endOfGame(io, room);
     }
   }
 
@@ -289,8 +289,21 @@ module.exports = class Game extends Dominoes {
   /**
    * Close the game
    */
-  endOfGame() {
+  endOfGame(io, room) {
     console.log("c'est la fin !");
     this.gameState = "ended";
+    let winnerPseudo = "";
+    let winnerScore = 0;
+    this.playersModule.room.forEach((player) => {
+      if (player.score > winnerScore) {
+        winnerScore = player.score;
+        winnerPseudo = player.pseudo;
+      }
+    });
+
+    io.to(room).emit("endOfGame", {
+      pseudo: winnerPseudo,
+      score: winnerScore,
+    });
   }
 };

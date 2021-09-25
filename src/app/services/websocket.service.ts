@@ -74,6 +74,9 @@ export class WebsocketService {
 
   public logs$: Observable<string> = this.socket.fromEvent('logs');
 
+  public endOfGame$: Observable<CurrentScore> =
+    this.socket.fromEvent('endOfGame');
+
   constructor(private socket: Socket) {}
 
   sendScoreRequest(): void {

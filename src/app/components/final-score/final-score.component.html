@@ -1,0 +1,7 @@
+<ng-container *ngIf="gameIsEnded">
+    <div class="modal">
+        <h3>Partie finie</h3>
+        <p>Le gagnant est {{ winner.pseudo }} avec {{ winner.score }} points.</p>
+    </div>
+    <div class="modal-background"></div>
+</ng-container>
