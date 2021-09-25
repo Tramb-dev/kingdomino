@@ -851,6 +851,8 @@ export class DominoesService {
   private myGridSubscription: Subscription;
   private myDroppablesSubscription: Subscription;
 
+  private endOfGameSubscription: Subscription;
+
   //private cannotPlaceDominoSubscription: Subscription;
 
   constructor(private websocket: WebsocketService) {
@@ -900,6 +902,14 @@ export class DominoesService {
           this.currentDominoes.shift;
         }
       }); */
+
+    this.endOfGameSubscription = this.websocket.endOfGame$.subscribe(() => {
+      this.currentDominoesSubscription.unsubscribe();
+      this.nextDominoesSubscription.unsubscribe();
+      this.myGridSubscription.unsubscribe();
+      this.myDroppablesSubscription.unsubscribe();
+      this.endOfGameSubscription.unsubscribe();
+    });
   }
 
   createGrille(): void {

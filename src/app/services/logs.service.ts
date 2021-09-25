@@ -17,6 +17,7 @@ export class LogsService {
   private nextDominoesSubscription: Subscription;
   private lastPickSubscription: Subscription;
   private lastTurnSubscription: Subscription;
+  private endOfGameSubscription: Subscription;
 
   constructor(private websocket: WebsocketService) {
     this.messagesSubscription = this.websocket.messages$.subscribe(
@@ -79,6 +80,13 @@ export class LogsService {
       };
       this.logs.unshift(log);
       this.lastTurnSubscription.unsubscribe();
+    });
+
+    this.endOfGameSubscription = this.websocket.endOfGame$.subscribe(() => {
+      this.messagesSubscription.unsubscribe();
+      this.logsSubcription.unsubscribe();
+      this.nextDominoesSubscription.unsubscribe();
+      this.endOfGameSubscription.unsubscribe();
     });
   }
 }
