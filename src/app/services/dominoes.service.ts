@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 export class DominoesService {
   grille: Case[][] = [];
   public myPlacedDominoes: PlacedDomino[] = [];
-  private allDominoes: Domino[] = [
+  private _allDominoes: Domino[] = [
     {
       numero: 1,
       orientation: 0,
@@ -904,6 +904,7 @@ export class DominoesService {
       }); */
 
     this.endOfGameSubscription = this.websocket.endOfGame$.subscribe(() => {
+      this.currentDominoes = [];
       this.currentDominoesSubscription.unsubscribe();
       this.nextDominoesSubscription.unsubscribe();
       this.myGridSubscription.unsubscribe();
@@ -954,14 +955,14 @@ export class DominoesService {
     const completeDominoes: Domino[] = [];
     for (let i = 0; i < arrayOfDisplayedDominoes.length; i++) {
       const index = arrayOfDisplayedDominoes[i] - 1;
-      completeDominoes.push(this.allDominoes[index]);
+      completeDominoes.push(this._allDominoes[index]);
     }
     return completeDominoes;
   }
 
   completeGrid(arrayOfDominoesPlaced: GridFromServer[]): PlacedDomino[] {
     return arrayOfDominoesPlaced.map((element) => {
-      const domino = this.allDominoes.find((x) => x.numero === element.numero);
+      const domino = this._allDominoes.find((x) => x.numero === element.numero);
       this.grille[element.gridPosition.row][
         element.gridPosition.col
       ].isDroppable = false;

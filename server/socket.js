@@ -116,7 +116,9 @@ module.exports = (io) => {
       if (
         socket.id === playersModule.currentPlayer.sid &&
         game.findDominoToPick(numero) &&
-        playersModule.currentPlayer.canPlaceKing
+        playersModule.currentPlayer.canPlaceKing &&
+        game.gameState === "launched" &&
+        !game.lastTurn
       ) {
         if (game.turn === 0) {
           game.firstTurnKing(io, socket, rooms[0], numero);
@@ -131,7 +133,8 @@ module.exports = (io) => {
       if (
         socket.id === playersModule.currentPlayer.sid &&
         game.findDominoToPlace(data.numero) &&
-        playersModule.currentPlayer.canPlaceDomino
+        playersModule.currentPlayer.canPlaceDomino &&
+        game.gameState === "launched"
       ) {
         game.nTurnDomino(io, socket, rooms[0], data);
       } else {

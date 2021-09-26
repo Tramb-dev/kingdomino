@@ -1,7 +1,8 @@
 const Dominoes = require("./dominoes/Dominoes");
+const chalk = require("chalk");
 
 module.exports = class Game extends Dominoes {
-  gameState = "waiting";
+  gameState = "waiting"; // waiting --> launching --> launched --> ended
   turn = 0;
   numberOfPlayers = 0;
   lastPick = false;
@@ -121,6 +122,7 @@ module.exports = class Game extends Dominoes {
   nTurnDomino(io, socket, room, data) {
     // Test si le joueur peut poser son domino sur sa grille de jeu
     const grid = this.playersModule.currentPlayer.grid.placeDominoOnGrid(data);
+
     if (grid) {
       // Si le joueur peut effectivement placer son domino
       this.playerHasPlacedDomino(data);
@@ -164,12 +166,15 @@ module.exports = class Game extends Dominoes {
             }
             io.to(room).emit("nextDominoes", this.changeNextToCurrent());
           }
+          io.to(room).emit("playersOrder", this.playersModule.playerOrder);
         }
-        io.to(room).emit("playersOrder", this.playersModule.playerOrder);
-        if (this.lastTurn) {
+        // Si on passe au dernier tour de jeu
+        if (this.lastTurn && this.gameState !== "ended") {
           this.lastTurnDomino(io, room);
         }
       } else if (this.lastTurn) {
+        // Si tous les dominos n'ont pas encore été posés mais qu'on est au dernier tour de jeu
+        this.nextPlayer();
         this.canPlayersDropDominoes(io, room);
       }
       if (!this.lastTurn) {
@@ -195,6 +200,8 @@ module.exports = class Game extends Dominoes {
     io.to(room).emit("lastTurn");
     console.log("c'est le dernier tour");
     [this.currentDominoes, this.nextDominoes] = [this.nextDominoes, []];
+    console.log(this.playersModule.playerOrder);
+    this.nextPlayer();
     this.canPlayersDropDominoes(io, room);
   }
 
@@ -205,32 +212,30 @@ module.exports = class Game extends Dominoes {
    * @param {*} room
    */
   canPlayersDropDominoes(io, room) {
-    this.nextPlayer();
-    console.log("test si le joueur peut poser son domino");
-    /* while (
-      this.domino < this.numberOfDisplayedDominoes &&
-      !this.canYouPlaceADomino(io, this.playersModule.currentPlayer.sid, room)
-    ) {
-      this.domino++;
-      this.whosNext(io, room, this.playersModule.currentPlayer);
-      cpt++;
-    } */
+    console.log(chalk.blue("canPlayersDropDominoes"));
 
-    let validator = false;
-    do {
-      validator = this.canYouPlaceADomino(
-        io,
-        this.playersModule.currentPlayer.sid,
-        room
-      );
-      this.whosNext(io, room, this.playersModule.currentPlayer);
-      if (validator) {
+    const canPlaceDomino = this.canYouPlaceADomino(
+      io,
+      this.playersModule.currentPlayer.sid,
+      room
+    );
+    console.log(
+      chalk.green(
+        "canPlaceDomino",
+        canPlaceDomino,
+        this.playersModule.currentPlayer.pseudo
+      )
+    );
+    console.log(chalk.grey(this.domino, this.currentDominoes));
+    if (this.domino < 4) {
+      if (!canPlaceDomino) {
+        this.domino++;
+        this.canPlayersDropDominoes(io, room);
+      } else {
         io.to(room).emit("currentDominoes", this.currentDominoes);
+        this.whosNext(io, room, this.playersModule.currentPlayer);
       }
-      this.domino++;
-    } while (this.domino < this.numberOfDisplayedDominoes && !validator);
-
-    if (this.domino > 3) {
+    } else {
       this.endOfGame(io, room);
     }
   }
@@ -287,23 +292,24 @@ module.exports = class Game extends Dominoes {
   }
 
   /**
-   * Close the game
+   * Fin du jeu
    */
   endOfGame(io, room) {
-    console.log("c'est la fin !");
     this.gameState = "ended";
-    let winnerPseudo = "";
-    let winnerScore = 0;
-    this.playersModule.room.forEach((player) => {
+    /* let winnerPseudo = "";
+    let winnerScore = 0; */
+    this.playersModule.room.sort((a, b) => a.score - b.score);
+    const winner = this.playersModule.room.pop();
+    /* this.playersModule.room.forEach((player) => {
       if (player.score > winnerScore) {
         winnerScore = player.score;
         winnerPseudo = player.pseudo;
       }
-    });
+    }); */
 
     io.to(room).emit("endOfGame", {
-      pseudo: winnerPseudo,
-      score: winnerScore,
+      pseudo: winner.pseudo,
+      score: winner.score,
     });
   }
 };
