@@ -200,7 +200,6 @@ module.exports = class Game extends Dominoes {
     io.to(room).emit("lastTurn");
     console.log("c'est le dernier tour");
     [this.currentDominoes, this.nextDominoes] = [this.nextDominoes, []];
-    console.log(this.playersModule.playerOrder);
     this.nextPlayer();
     this.canPlayersDropDominoes(io, room);
   }
@@ -213,26 +212,21 @@ module.exports = class Game extends Dominoes {
    */
   canPlayersDropDominoes(io, room) {
     console.log(chalk.blue("canPlayersDropDominoes"));
+    console.log(chalk.grey(this.domino, this.currentDominoes));
 
     const canPlaceDomino = this.canYouPlaceADomino(
       io,
       this.playersModule.currentPlayer.sid,
       room
     );
-    console.log(
-      chalk.green(
-        "canPlaceDomino",
-        canPlaceDomino,
-        this.playersModule.currentPlayer.pseudo
-      )
-    );
-    console.log(chalk.grey(this.domino, this.currentDominoes));
+
     if (this.domino < 4) {
       if (!canPlaceDomino) {
         this.domino++;
         this.canPlayersDropDominoes(io, room);
       } else {
         io.to(room).emit("currentDominoes", this.currentDominoes);
+        io.to(room).emit("playerOrder", this.playersModule.playerOrder);
         this.whosNext(io, room, this.playersModule.currentPlayer);
       }
     } else {
@@ -253,7 +247,6 @@ module.exports = class Game extends Dominoes {
         this.getOneDomino(this.currentDominoes[0])
       )
     ) {
-      console.log("emission des droppables");
       // Si un mouvement est possible
       io.to(sid).emit(
         "droppables",
@@ -296,20 +289,12 @@ module.exports = class Game extends Dominoes {
    */
   endOfGame(io, room) {
     this.gameState = "ended";
-    /* let winnerPseudo = "";
-    let winnerScore = 0; */
     this.playersModule.room.sort((a, b) => a.score - b.score);
     const winner = this.playersModule.room.pop();
-    /* this.playersModule.room.forEach((player) => {
-      if (player.score > winnerScore) {
-        winnerScore = player.score;
-        winnerPseudo = player.pseudo;
-      }
-    }); */
 
     io.to(room).emit("endOfGame", {
       pseudo: winner.pseudo,
-      score: winner.score,
+      score: winner.grid.score,
     });
   }
 };

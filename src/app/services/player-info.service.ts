@@ -177,6 +177,7 @@ export class PlayerInfoService {
     );
 
     this.endOfGameSubscription = this.websocket.endOfGame$.subscribe(() => {
+      this.playersOrder = [];
       this.kingsPosition = [];
       this.myPlayerSubscription.unsubscribe();
       this.allPlayersSubscription.unsubscribe();

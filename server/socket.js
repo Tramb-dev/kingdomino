@@ -43,7 +43,6 @@ module.exports = (io) => {
           readyToPlay: false,
           canAccessToLobby: true,
           canAccessToGame: false,
-          score: 0,
           canPlaceKing: false,
           canPlaceDomino: false,
           grid: new Grid(),
