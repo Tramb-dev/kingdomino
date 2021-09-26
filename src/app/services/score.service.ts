@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Score } from '../interfaces/score';
+import { Score, ScoreSheet } from '../interfaces/score';
 import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScoreService {
-  public scoreSheet: Score[] = [];
+  public scoreSheet: ScoreSheet = {
+    lastScores: [],
+    bestScores: [],
+  };
 
   constructor(private websocket: WebsocketService) {}
 
-  async getScore(): Promise<Score[]> {
+  async getScore(): Promise<ScoreSheet> {
     this.websocket.sendScoreRequest();
     return await this.websocket.getScore.then(
-      (results: Score[]) => (this.scoreSheet = results)
+      (results: ScoreSheet) => (this.scoreSheet = results)
     );
   }
 }

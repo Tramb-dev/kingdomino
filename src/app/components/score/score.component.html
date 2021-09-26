@@ -1,8 +1,20 @@
 <div class="score-container">
-    <div *ngFor="let score of scoreService.scoreSheet" class="individual-score">
-        <div class="bandeau" [ngStyle]="{'background-color': score.color}"></div>
-        <p>
-            <span class="pseudo">{{ score.pseudo }}</span>&nbsp;: {{ score.score }}
-        </p>
+    <div class="last">
+        <h3>Derniers scores : </h3>
+        <div *ngFor="let score of scoreService.scoreSheet.lastScores" class="individual-score">
+            <div class="bandeau" [ngStyle]="{'background-color': score.color}"></div>
+            <p>
+                <span class="pseudo">{{ score.pseudo }}</span>&nbsp;: {{ score.score }}
+            </p>
+        </div>
+    </div>
+    <div class="best">
+        <h3>Meilleurs scores : </h3>
+        <div *ngFor="let score of scoreService.scoreSheet.bestScores" class="individual-score">
+            <div class="bandeau" [ngStyle]="{'background-color': score.color}"></div>
+            <p>
+                <span class="pseudo">{{ score.pseudo }}</span>&nbsp;: {{ score.score }}
+            </p>
+        </div>
     </div>
 </div>

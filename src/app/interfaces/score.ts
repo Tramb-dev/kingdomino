@@ -9,3 +9,8 @@ export interface CurrentScore {
   pseudo: string;
   score: number;
 }
+
+export interface ScoreSheet {
+  lastScores: Score[];
+  bestScores: Score[];
+}

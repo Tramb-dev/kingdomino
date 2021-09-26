@@ -6,13 +6,14 @@ import { take } from 'rxjs/operators';
 import { Player } from 'src/app/interfaces/player';
 import { GridFromServer } from '../interfaces/interfaces';
 import { Messages } from '../interfaces/messages';
-import { CurrentScore, Score } from '../interfaces/score';
+import { CurrentScore, ScoreSheet } from '../interfaces/score';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketService {
-  public getScore: Promise<Score[]> = this.socket.fromOneTimeEvent('getScore');
+  public getScore: Promise<ScoreSheet> =
+    this.socket.fromOneTimeEvent('getScore');
   // Observable recevant les mises à jour sur le joueur
   public player$: Observable<Player> = this.socket.fromEvent('myPlayer');
   // Observable recevant les mises à jour sur tous les joueurs

@@ -20,9 +20,15 @@ module.exports = (io) => {
 
     // Envoi le tableau de score
     socket.on("getScore", () => {
-      db.getScore()
-        .then((result) => {
-          socket.emit("getScore", result);
+      const lastScores = db.getLastScores();
+      const bestScores = db.getBestScores();
+
+      Promise.all([lastScores, bestScores])
+        .then((values) => {
+          socket.emit("getScore", {
+            lastScores: values[0],
+            bestScores: values[1],
+          });
         })
         .catch((err) => {
           console.error(`Something went wrong ${err}`);

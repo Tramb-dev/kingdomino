@@ -2,6 +2,13 @@
   border: 1px solid black;
   padding: 10px;
   margin: 10px;
+  display: flex;
+  flex-direction: row;
+
+  .last,
+  .best {
+    margin: 0 20px;
+  }
 }
 
 .individual-score {
