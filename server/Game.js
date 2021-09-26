@@ -1,5 +1,6 @@
 const Dominoes = require("./dominoes/Dominoes");
 const chalk = require("chalk");
+const db = require("./db");
 
 module.exports = class Game extends Dominoes {
   gameState = "waiting"; // waiting --> launching --> launched --> ended
@@ -198,7 +199,6 @@ module.exports = class Game extends Dominoes {
    */
   lastTurnDomino(io, room) {
     io.to(room).emit("lastTurn");
-    console.log("c'est le dernier tour");
     [this.currentDominoes, this.nextDominoes] = [this.nextDominoes, []];
     this.nextPlayer();
     this.canPlayersDropDominoes(io, room);
@@ -211,9 +211,6 @@ module.exports = class Game extends Dominoes {
    * @param {*} room
    */
   canPlayersDropDominoes(io, room) {
-    console.log(chalk.blue("canPlayersDropDominoes"));
-    console.log(chalk.grey(this.domino, this.currentDominoes));
-
     const canPlaceDomino = this.canYouPlaceADomino(
       io,
       this.playersModule.currentPlayer.sid,
@@ -296,5 +293,7 @@ module.exports = class Game extends Dominoes {
       pseudo: winner.pseudo,
       score: winner.grid.score,
     });
+
+    db.saveScore(winner.pseudo, winner.grid.score, winner.color);
   }
 };

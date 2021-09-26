@@ -11,3 +11,15 @@ exports.getScore = async function () {
   client.close();
   return data;
 };
+
+exports.saveScore = async function (pseudo, score, color) {
+  await client.connect();
+  const result = await client.db("kingdomino").collection("score").insertOne({
+    pseudo: pseudo,
+    score: score,
+    color: color,
+    date: new Date(),
+  });
+  client.close();
+  return result;
+};
