@@ -6,6 +6,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
 import { DominoComponent } from './components/domino/domino.component';
@@ -27,9 +28,9 @@ import { FinalScoreComponent } from './components/final-score/final-score.compon
 const config: SocketIoConfig = {
   url: environment.socketUrl,
   options: {
-    transports: ['websocket']
-  }
-}
+    transports: ['websocket'],
+  },
+};
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ const config: SocketIoConfig = {
     GameViewComponent,
     HomeComponent,
     LobbyComponent,
-    FinalScoreComponent
+    FinalScoreComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,8 +57,9 @@ const config: SocketIoConfig = {
     AppRoutingModule,
     FormsModule,
     SocketIoModule.forRoot(config),
+    FontAwesomeModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

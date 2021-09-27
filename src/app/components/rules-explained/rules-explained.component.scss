@@ -2,18 +2,20 @@
 
 article {
   margin: 10px;
+  color: $fontColor;
 }
 
 section {
   padding-bottom: 5px;
   border-radius: 5px;
   box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+  font-family: "QuickSand", "Open Sans", sans-serif;
 }
 
 h3 {
-  color: $blue;
-  background-color: lightcyan;
-  padding: 10px 5px;
+  color: $white;
+  background-color: $bgcMain;
+  padding: 10px 10px;
   text-transform: uppercase;
   box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1);
   border-radius: 5px;

@@ -1,1 +1,32 @@
+<nav class="navbar" id="navbar">
+    <div class="container">
+        <div><a href="https://ravier.online" title="Visiter mon portfolio">Ravier</a></div>
+        <div><a id="nav-email" href="mailto:bertrand.ravier@gmail.com">Contactez-moi !</a></div>
+    </div>
+</nav>
 <router-outlet></router-outlet>
+<footer>
+    <div class="container footer-section text-light">
+        <div class="footer-heading">
+            <h2>Pour me contacter</h2>
+        </div>
+        <a class="link-light" href="mailto:bertrand.ravier@gmail.com">
+            <h3>Bertrand.Ravier@gmail.com</h3>
+        </a>
+        <div class="social">
+            <a class="link-light" href="https://www.linkedin.com/in/bertrand-ravier" target="_blank" title="Mon LinkedIn">
+                <fa-icon [icon]="faLinkedin"></fa-icon>
+            </a>
+            <a class="link-light" href="https://github.com/Tramb-dev" target="_blank" title="Mon Github">
+                <fa-icon [icon]="faGithub"></fa-icon>
+            </a>
+            <div class="barre"></div>
+        </div>
+        <div class="copyright">
+            <p>
+                Ce site est propulsé par <fa-icon [icon]="faAngular"></fa-icon>ngular 12.
+            </p>
+        </div>
+    </div>
+</footer>
+<noscript>Veuillez activer Javascript sur votre navigateur pour profiter du jeu</noscript>
