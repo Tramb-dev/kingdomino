@@ -6,7 +6,7 @@ const webSocketServer = require("socket.io")();
 require("./socket")(webSocketServer);
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8090;
 const ROOT = path.dirname(__dirname);
 const publicPath = path.normalize(ROOT + "/dist/kingdomino");
 

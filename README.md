@@ -25,12 +25,20 @@ Create a configuration file named `./server/config.js` with this content : `expo
 
 Don't forget to replace `<login>`, `<password>` and `<mongoDBuri>` with your credentials.
 
+Change if needed the server port in `app.js` and in `environment/environment.prod.ts`.
+
 ## Server
 
-Enter in server directory with `cd server`. Run `npx app.js` for server. Navigate to `http://localhost:8080/`.
+Enter in server directory with `cd server`. Run `node app.js` for server. Navigate to `http://localhost:8090/`.
 
 ## Infos
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
 
 The server runs under node.js version 16.9.1.
+
+## Known issues
+
+Sometimes my MongoDB database doesn't deliver the data, a browser refresh will do the job.
+
+There are only few errors covered. Need to add more error handling.
